@@ -16,7 +16,7 @@ type List struct {
 }
 
 func (l *List) Add(element int) {
-	l.expansion(cap(l.array) + 1)
+	l.expansion(l.length + 1)
 	l.array[l.length] = element
 	l.length++
 }
@@ -39,7 +39,7 @@ func (l *List) Set(element, index int) error {
 	return nil
 }
 func (l *List) expansion(index int) {
-	if index >= l.length {
+	if index >= cap(l.array) {
 		//l.cap = index * 2
 		//创建新数组指向
 		//var tCap = l.cap
@@ -78,11 +78,12 @@ func (l *List) RemoveIndex(index int) int {
 		fmt.Println("index range out")
 		return -1
 	}
+
+	l.length--
 	//平移
-	for i := index; i < l.length-2; i++ {
+	for i := index; i < l.length; i++ {
 		l.array[i] = l.array[i+1]
 	}
-	l.length--
 	return index
 }
 func (l *List) Get(index int) (int, error) {
@@ -127,10 +128,10 @@ func main() {
 	}
 	//show(l)
 	//fmt.Println(l.Get(5))
-	l.Remove()
+	l.RemoveIndex(12)
 	fmt.Println(l.Contains(12))
 	fmt.Println(l.IndexOf(3))
-	//show(l)
+	show(l)
 	fmt.Println(l.Empty())
 }
 func show(l *List) {
