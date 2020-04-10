@@ -25,7 +25,7 @@ func NewList() *List {
 	l := &List{
 		length: 0,
 	}
-	l.array = make([]int, 16)
+	l.array = make([]int, defaultSize)
 	return l
 }
 
@@ -43,7 +43,7 @@ func (l *List) expansion(index int) {
 		//l.cap = index * 2
 		//创建新数组指向
 		//var tCap = l.cap
-		l.resize(index * 2)
+		l.resize(index << 1)
 		//l.cap = index * 2
 	}
 }
@@ -112,8 +112,8 @@ func (l *List) Contains(element int) bool {
 	if l.Size() == 0 {
 		return false
 	}
-	for ele, _ := range l.array {
-		if ele == element {
+	for ele := range l.array {
+		if element == ele {
 			return true
 		}
 	}
