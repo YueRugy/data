@@ -132,7 +132,7 @@ func main() {
 	l.RemoveIndex(12)
 	fmt.Println(l.Contains(12))
 	fmt.Println(l.IndexOf(3))
-	//show(l)
+	show(l)
 	fmt.Println(l.Empty())
 	fmt.Println(l.Get(4))
 }
