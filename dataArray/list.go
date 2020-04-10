@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"reflect"
 )
 
 const (
@@ -10,12 +11,12 @@ const (
 )
 
 type List struct {
-	array  []int
+	array  []interface{}
 	length int
 	//cap    int
 }
 
-func (l *List) Add(element int) {
+func (l *List) Add(element interface{}) {
 	l.expansion(l.length + 1)
 	l.array[l.length] = element
 	l.length++
@@ -25,11 +26,11 @@ func NewList() *List {
 	l := &List{
 		length: 0,
 	}
-	l.array = make([]int, defaultSize)
+	l.array = make([]interface{}, defaultSize)
 	return l
 }
 
-func (l *List) Set(element, index int) error {
+func (l *List) Set(element interface{}, index int) error {
 	if l.out(index) {
 		return errors.New("index out range")
 	}
@@ -55,18 +56,18 @@ func (l *List) Remove() bool {
 	return true
 }
 func (l *List) resize(newCap int) {
-	tempArray := make([]int, newCap)
+	tempArray := make([]interface{}, newCap)
 	for i := 0; i < l.length; i++ {
 		tempArray[i] = l.array[i]
 	}
 	l.array = tempArray
 }
-func (l *List) IndexOf(ele int) int {
+func (l *List) IndexOf(ele interface{}) int {
 	if l.Empty() {
 		return -1
 	} else {
-		for v, i := range l.array {
-			if v == ele {
+		for i, v := range l.array {
+			if reflect.DeepEqual(v, ele) {
 				return i
 			}
 		}
@@ -86,17 +87,17 @@ func (l *List) RemoveIndex(index int) int {
 	}
 	return index
 }
-func (l *List) Get(index int) (int, error) {
+func (l *List) Get(index int) (interface{}, error) {
 	if l.out(index) {
-		return -1, errors.New("index out range")
+		return nil, errors.New("index out range")
 	} else {
-		for v, i := range l.array {
+		for i, v := range l.array {
 			if i == index {
 				return v, nil
 			}
 		}
 	}
-	return -1, errors.New("index out range")
+	return nil, errors.New("index out range")
 }
 func (l *List) out(index int) bool {
 	return index < 0 || index >= l.length
@@ -131,8 +132,9 @@ func main() {
 	l.RemoveIndex(12)
 	fmt.Println(l.Contains(12))
 	fmt.Println(l.IndexOf(3))
-	show(l)
+	//show(l)
 	fmt.Println(l.Empty())
+	fmt.Println(l.Get(4))
 }
 func show(l *List) {
 	for i := 0; i < l.length; i++ {
