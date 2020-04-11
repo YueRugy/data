@@ -133,7 +133,8 @@ func (l *LinkedList) IndexOf(ele interface{}) int {
 	}
 	return index
 }
-func main() {
+
+/*func main() {
 
 	l := NewLinked()
 	l.Add(3)
@@ -149,6 +150,7 @@ func main() {
 	//l.Remove()
 	l.Show()
 }
+*/
 func (l *LinkedList) Show() {
 	for t := l.first; t != nil; t = t.next {
 		fmt.Println(t.ele)
