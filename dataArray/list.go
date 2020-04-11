@@ -109,7 +109,7 @@ func (l *List) Size() int {
 func (l *List) Empty() bool {
 	return l.length == 0
 }
-func (l *List) Contains(element int) bool {
+func (l *List) Contains(element interface{}) bool {
 	if l.Size() == 0 {
 		return false
 	}
