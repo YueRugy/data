@@ -65,6 +65,7 @@ func (l *DoubleLinkedList) Remove() {
 			l.tail.prev.next = nil
 			l.tail = l.tail.prev
 		}
+		l.size--
 	}
 }
 
