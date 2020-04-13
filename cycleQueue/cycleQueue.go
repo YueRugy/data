@@ -45,7 +45,11 @@ func (c *CycleQueue) DeQueue() interface{} {
 }
 
 func (c *CycleQueue) index(index int) int {
-	return (c.front + index) % len(c.elements)
+	index += c.front
+	if index >= len(c.elements) {
+		return index - len(c.elements)
+	}
+	return index
 }
 func (c *CycleQueue) EnQueue(ele interface{}) {
 	c.ensureCap(c.Size() + 1)
