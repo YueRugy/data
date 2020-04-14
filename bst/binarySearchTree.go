@@ -67,17 +67,26 @@ func (b *BinarySearchTree) Add(ele int) {
 
 }
 
+func PreRange(n *Node) {
+	if n == nil {
+		return
+	}
+	fmt.Print(n.ele)
+	fmt.Print("\t")
+	PreRange(n.left)
+	PreRange(n.right)
+}
+
 func compare(c1, c2 int) int {
 	return c1 - c2
 }
 
 func main() {
-	arr := [...]int{7, 4, 9, 2, 5, 8, 11, 3}
+	arr := [...]int{7, 4, 9, 2, 5, 8, 11, 3, 12, 1}
 	bst := NewBST()
 	for _, val := range arr {
 		bst.Add(val)
 	}
-	bst.Add(12)
-	bst.Add(1)
-	fmt.Println(bst)
+	//fmt.Println(bst)
+	PreRange(bst.root)
 }
