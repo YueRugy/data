@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type BinarySearchTree struct {
 	size int
@@ -117,6 +119,52 @@ func compare(c1, c2 int) int {
 	return c1 - c2
 }
 
+func PreRangeFunc(node *Node, visitor func(int)) {
+	if node == nil {
+		return
+	}
+	visitor(node.ele)
+	PreRangeFunc(node.left, visitor)
+	PreRangeFunc(node.right, visitor)
+}
+
+func MidRangeFunc(node *Node, visitor func(int)) {
+	if node == nil {
+		return
+	}
+	MidRangeFunc(node.left, visitor)
+	visitor(node.ele)
+	MidRangeFunc(node.right, visitor)
+}
+
+func PostRangeFunc(node *Node, visitor func(int)) {
+	if node == nil {
+		return
+	}
+	PostRangeFunc(node.left, visitor)
+	PostRangeFunc(node.right, visitor)
+	visitor(node.ele)
+}
+
+func LevelRangeFunc(root *Node, visitor func(int)) {
+	if root == nil {
+		return
+	}
+	queue := make([]*Node, 0)
+	queue = append(queue, root)
+	for ; len(queue) > 0; {
+		node := queue[0]
+		visitor(node.ele)
+		queue = queue[1:]
+		if node.left != nil {
+			queue = append(queue, node.left)
+		}
+		if node.right != nil {
+			queue = append(queue, node.right)
+		}
+	}
+}
+
 func main() {
 	arr := [...]int{7, 4, 9, 2, 5, 8, 11, 3, 12, 1}
 	bst := NewBST()
@@ -124,11 +172,29 @@ func main() {
 		bst.Add(val)
 	}
 	//fmt.Println(bst)
+	visitor := func(ele int) {
+		fmt.Printf("_%d_\t", ele)
+	}
 	PreRange(bst.root)
+	fmt.Println()
+	fmt.Println("---------------------")
+	PreRangeFunc(bst.root, visitor)
+	fmt.Println()
 	fmt.Println("--------------")
 	MidRange(bst.root)
+	fmt.Println()
+	fmt.Println("--------------")
+	MidRangeFunc(bst.root, visitor)
+	fmt.Println()
 	fmt.Println("--------------")
 	PostRange(bst.root)
+	fmt.Println()
+	fmt.Println("--------------")
+	PostRangeFunc(bst.root, visitor)
+	fmt.Println()
 	fmt.Println("--------------")
 	LevelRange(bst.root)
+	fmt.Println()
+	fmt.Println("--------------")
+	LevelRangeFunc(bst.root, visitor)
 }
