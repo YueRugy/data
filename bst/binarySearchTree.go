@@ -96,6 +96,23 @@ func PostRange(n *Node) {
 	fmt.Print("\t")
 }
 
+func LevelRange(root *Node) {
+	queue := make([]*Node, 0)
+	queue = append(queue, root)
+	for ; len(queue) != 0; {
+		node := queue[0]
+		fmt.Print(node.ele)
+		fmt.Print("\t")
+		queue = queue[1:]
+		if node.left != nil {
+			queue = append(queue, node.left)
+		}
+		if node.right != nil {
+			queue = append(queue, node.right)
+		}
+	}
+}
+
 func compare(c1, c2 int) int {
 	return c1 - c2
 }
@@ -112,4 +129,6 @@ func main() {
 	MidRange(bst.root)
 	fmt.Println("--------------")
 	PostRange(bst.root)
+	fmt.Println("--------------")
+	LevelRange(bst.root)
 }
