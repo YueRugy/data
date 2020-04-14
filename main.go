@@ -57,14 +57,15 @@ func (this *MyQueue) Empty() bool {
 
 func main() {
 
-	q := Constructor()
-	pq := &q
-	pq.Push(1)
-	pq.Push(2)
-	res := pq.Peek()
-	fmt.Println(res)
-	res = pq.Pop()
-	fmt.Println(res)
-	fmt.Println(pq.Empty())
+	//	q := Constructor()
+	//	pq := &q
+	//	pq.Push(1)
+	//	pq.Push(2)
+	//	res := pq.Peek()
+	//	fmt.Println(res)
+	//	res = pq.Pop()
+	//	fmt.Println(res)
+	//	fmt.Println(pq.Empty())
 
+	fmt.Println(1>>1)
 }
