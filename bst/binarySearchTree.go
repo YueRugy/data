@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 type BinarySearchTree struct {
@@ -165,14 +166,80 @@ func LevelRangeFunc(root *Node, visitor func(int)) {
 	}
 }
 
+func Height(n *Node) int {
+	if n == nil {
+		return 0
+	}
+	return int(1 + math.Max(float64(Height(n.left)), float64(Height(n.right))))
+}
+
+func Height2(n *Node) int {
+	if n == nil {
+		return 0
+	}
+	queue := make([]*Node, 0)
+	queue = append(queue, n)
+
+	count := 0
+	levelSize := 1
+
+	for len(queue) != 0 {
+		node := queue[0]
+		queue = queue[1:]
+		levelSize--
+		if node.left != nil {
+			queue = append(queue, node.left)
+		}
+		if node.right != nil {
+			queue = append(queue, node.right)
+		}
+		if levelSize == 0 {
+			count++
+			levelSize = len(queue)
+		}
+	}
+	return count
+}
+
+func Complete(root *Node) bool {
+	if root == nil {
+		return false
+	}
+	queue := make([]*Node, 0)
+	queue = append(queue, root)
+	leaf := false
+	for ; len(queue) > 0; {
+		node := queue[0]
+		queue = queue[1:]
+		if leaf && (node.left != nil || node.right != nil) {
+			return false
+		}
+		if node.left != nil && node.right != nil {
+			queue = append(queue, node.left, node.right)
+		} else if node.left == nil && node.right != nil {
+			return false
+		} else if node.left == nil && node.right == nil {
+			leaf = true
+		} else {
+			leaf = true
+			queue = append(queue, node.left)
+		}
+	}
+	return true
+}
+
 func main() {
-	arr := [...]int{7, 4, 9, 2, 5, 8, 11, 3, 12, 1}
+//	arr := [...]int{7, 4, 9, 2, 5, 8, 11, 3, 12, 1, 0}
+	arr := [...]int{10,6,16,3,8,14,17,1,4,7,15}
 	bst := NewBST()
 	for _, val := range arr {
 		bst.Add(val)
 	}
+	fmt.Println(Height(bst.root))
+	fmt.Println(Height2(bst.root))
+	fmt.Println(Complete(bst.root))
 	//fmt.Println(bst)
-	visitor := func(ele int) {
+	/*visitor := func(ele int) {
 		fmt.Printf("_%d_\t", ele)
 	}
 	PreRange(bst.root)
@@ -196,5 +263,5 @@ func main() {
 	LevelRange(bst.root)
 	fmt.Println()
 	fmt.Println("--------------")
-	LevelRangeFunc(bst.root, visitor)
+	LevelRangeFunc(bst.root, visitor)*/
 }
