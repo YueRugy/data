@@ -76,6 +76,25 @@ func PreRange(n *Node) {
 	PreRange(n.left)
 	PreRange(n.right)
 }
+func MidRange(n *Node) {
+	if n == nil {
+		return
+	}
+	MidRange(n.left)
+	fmt.Print(n.ele)
+	fmt.Print("\t")
+	MidRange(n.right)
+}
+
+func PostRange(n *Node) {
+	if n == nil {
+		return
+	}
+	PostRange(n.left)
+	PostRange(n.right)
+	fmt.Print(n.ele)
+	fmt.Print("\t")
+}
 
 func compare(c1, c2 int) int {
 	return c1 - c2
@@ -89,4 +108,8 @@ func main() {
 	}
 	//fmt.Println(bst)
 	PreRange(bst.root)
+	fmt.Println("--------------")
+	MidRange(bst.root)
+	fmt.Println("--------------")
+	PostRange(bst.root)
 }
