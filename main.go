@@ -67,5 +67,12 @@ func main() {
 	//	fmt.Println(res)
 	//	fmt.Println(pq.Empty())
 
-	fmt.Println(1>>1)
+	//fmt.Println(1>>1)
+	sli:=make([]int,0)
+	f(sli)
+	fmt.Println(sli)
+}
+
+func f(sli []int) {
+	sli = append(sli, 1, 2, 3, 4)
 }

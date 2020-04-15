@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"reflect"
 )
 
 type BinarySearchTree struct {
@@ -228,16 +229,79 @@ func Complete(root *Node) bool {
 	return true
 }
 
+func Predecessor(n *Node) *Node {
+	if n == nil {
+		return n
+	}
+	if n.left != nil {
+		temp := n.left
+		for ; temp.right != nil; {
+			temp = temp.right
+		}
+		return temp
+	}
+	if n.left == nil && n.parent != nil {
+		temp := n
+		for ; temp.parent != nil; {
+			if reflect.DeepEqual(temp, temp.parent.right) {
+				return temp.parent
+			}
+			temp = temp.parent
+		}
+		//return nil
+	}
+	return nil
+}
+
+func Successor(n *Node) *Node {
+	if n == nil {
+		return n
+	}
+	if n.right != nil {
+		temp := n.right
+		for temp.left != nil {
+			temp = temp.left
+		}
+		return temp
+	}
+
+	if n.right == nil && n.parent != nil {
+		temp := n
+		for temp.parent != nil {
+			if reflect.DeepEqual(temp, temp.parent.left) {
+				return temp.parent
+			}
+			temp=temp.parent
+		}
+	}
+	return nil
+}
+
 func main() {
-//	arr := [...]int{7, 4, 9, 2, 5, 8, 11, 3, 12, 1, 0}
-	arr := [...]int{10,6,16,3,8,14,17,1,4,7,15}
+	//	arr := [...]int{7, 4, 9, 2, 5, 8, 11, 3, 12, 1, 0}
+	arr := [...]int{10, 6, 16, 3, 8, 14, 17, 1, 4, 7, 15, 9}
 	bst := NewBST()
 	for _, val := range arr {
 		bst.Add(val)
 	}
-	fmt.Println(Height(bst.root))
-	fmt.Println(Height2(bst.root))
-	fmt.Println(Complete(bst.root))
+
+	//	node := Successor(bst.root)
+	//	if node != nil {
+	//		fmt.Println(node.ele)//print 14
+	//	}
+	node := Successor(bst.root.left.right.right)
+	if node != nil {
+		fmt.Println(node.ele) //print 10
+	}
+	//node := Predecessor(bst.root)
+	//node := Predecessor(bst.root.right.left) //print   10
+	//if node != nil {
+	//	fmt.Println(node.ele)
+	//}
+
+	//fmt.Println(Height(bst.root))
+	//fmt.Println(Height2(bst.root))
+	//fmt.Println(Complete(bst.root))
 	//fmt.Println(bst)
 	/*visitor := func(ele int) {
 		fmt.Printf("_%d_\t", ele)
