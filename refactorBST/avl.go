@@ -61,15 +61,15 @@ func (avl *AVL) Add(ele int) {
 }
 
 func (avl *AVL) AfterAdd(node *Node) {
-	temp := node
-	for temp.parent != nil {
-		if avl.isBalance(node) {
-			avl.updateHeight(node)
+	temp := node.parent
+	for temp != nil {
+		if avl.isBalance(temp) {
+			avl.updateHeight(temp)
 		} else { //恢复平衡
 			avl.reBalance(temp)
 			break
 		}
-
+		temp = temp.parent
 	}
 	//avl.updateHeight(node)
 }
@@ -119,6 +119,11 @@ func (avl *AVL) reBalance(grand *Node) {
 }
 
 func (avl *AVL) taliChild(p *Node) *Node {
+	if p.left == nil {
+		return p.right
+	} else if p.right == nil {
+		return p.left
+	}
 	if p.left.height > p.right.height {
 		return p.left
 	} else if p.left.height < p.right.height {
@@ -135,26 +140,54 @@ func (avl *AVL) taliChild(p *Node) *Node {
 
 func (avl *AVL) LL(grand *Node, parent *Node) { //LL 右旋 G 右旋
 	grand.left = parent.right
-	parent.right.parent = grand
+	if parent.right != nil {
+		parent.right.parent = grand
+	}
 	parent.right = grand
-	parent.parent = grand.parent
+	if grand.parent == nil {
+		avl.root = parent
+		parent.parent = nil
+	} else if reflect.DeepEqual(grand, grand.parent.left) {
+		parent.parent = grand.parent
+		grand.parent.left = parent
+
+	} else if reflect.DeepEqual(grand, grand.parent.right) {
+		parent.parent = grand.parent
+		grand.parent.right = parent
+	}
 	grand.parent = parent
+	avl.updateHeight(grand)
+	avl.updateHeight(parent)
 }
 
 func (avl *AVL) RR(grand *Node, parent *Node) { // RR 左旋 G 左旋
 	grand.right = parent.left
-	parent.left.parent = grand
+	if parent.left != nil {
+		parent.left.parent = grand
+		parent.parent = nil
+	}
 	parent.left = grand
-	parent.parent = grand.parent
+	//parent.parent = grand.parent
+	if grand.parent == nil {
+		avl.root = parent
+	} else if reflect.DeepEqual(grand, grand.parent.left) {
+		parent.parent = grand.parent
+		grand.parent.left = parent
+	} else if reflect.DeepEqual(grand, grand.parent.right) {
+		parent.parent = grand.parent
+		grand.parent.right = parent
+	}
 	grand.parent = parent
+	avl.updateHeight(grand)
+	avl.updateHeight(parent)
 }
 
 func (avl *AVL) LR(grand *Node, parent *Node, node *Node) { //LR 先右旋在左旋
-	avl.LL(parent, node)
-	avl.RR(grand, node)
+	avl.RR(parent, node)
+	avl.LL(grand, node)
 }
 
 func (avl *AVL) RL(grand *Node, parent *Node, node *Node) {
-	avl.RR(parent, node)
-	avl.LL(grand, node)
+	avl.LL(parent, node)
+	avl.RR(grand, node)
 }
