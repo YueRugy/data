@@ -1,4 +1,4 @@
-package main
+package refactorBST
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ type BinaryTree struct {
 }
 type Node struct {
 	ele    int
+	height int
 	left   *Node
 	right  *Node
 	parent *Node
@@ -233,6 +234,7 @@ func (bst BinarySearchTree) Add(ele int) {
 	node := &Node{
 		ele: ele,
 	}
+
 	if bst.Empty() {
 		bst.root = node
 		bst.size++
@@ -355,13 +357,8 @@ func compare(c1, c2 int) int {
 	return c1 - c2
 }
 func main() {
-	arr := [...]int{8,6,2,7,10,9,11}
-	bst := NewBst()
-	for _, v := range arr {
-		bst.Add(v)
-	}
 
-	bst.Remove(10)
+	//bst.Remove(10)
 	fmt.Println()
 
 	//fmt.Println(bst.Contains(8))
