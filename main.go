@@ -14,17 +14,22 @@ func main() {
 			bst.Add(v)
 		}
 	*/
-	avl := refactorBST.NewAVL()
+	avl := refactorBST.NewAVL1()
 	for _, v := range arr {
 		avl.Add(v)
 	}
+	fmt.Println(avl.HeightByLevel())
+	avl.LevelRange(func(i int) {
+		fmt.Print(strconv.Itoa(i) + "\t")
+	})
+
 	/*bst.MidRange(func(i int) {
 		//fmt.Print(strconv.Itoa(i) + "\t")
 	})*/
 	//fmt.Println()
-	avl.LevelRange(func(i int) {
-		fmt.Print(strconv.Itoa(i) + "\t")
-	})
-	fmt.Println()
-	fmt.Println(avl.HeightByLevel())
+	//avl.LevelRange(func(i int) {
+	//	fmt.Print(strconv.Itoa(i) + "\t")
+	//})
+	//fmt.Println()
+	//fmt.Println(avl.HeightByLevel())
 }
