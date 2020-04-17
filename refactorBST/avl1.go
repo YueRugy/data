@@ -81,6 +81,11 @@ func (avl *avl1) AfterAdd(node *Node) {
 	}
 }
 
+func (avl *avl1) Remove(ele int) {
+	node := avl.BinarySearchTree.Remove(ele)
+	avl.removeAfter(node)
+}
+
 //左右子树的高度绝对值是否大于max
 func (avl *avl1) isBalance(node *Node) bool {
 	lh, rh := avl.getHeight(node)
@@ -230,4 +235,16 @@ func (avl *avl1) lr(grand *Node, parent *Node, node *Node) {
 func (avl *avl1) rl(grand *Node, parent *Node, node *Node) {
 	avl.ll(parent, node)
 	avl.rr(grand, node)
+}
+
+func (avl *avl1) removeAfter(node *Node) {
+	temp := node.parent
+	for temp != nil {
+		if avl.isBalance(temp) {
+			avl.updateHeight(temp)
+		} else {
+			avl.reBalance(temp)
+		}
+		temp = temp.parent
+	}
 }

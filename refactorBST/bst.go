@@ -18,36 +18,36 @@ type Node struct {
 	parent *Node
 }
 
-func (bt BinaryTree) Size() int {
+func (bt *BinaryTree) Size() int {
 	return bt.size
 }
 
-func (bt BinaryTree) Empty() bool {
+func (bt *BinaryTree) Empty() bool {
 	return bt.Size() == 0
 }
 
-func (bt BinaryTree) PreRange(visitor func(int)) {
+func (bt *BinaryTree) PreRange(visitor func(int)) {
 	PreRange(bt.root, visitor)
 }
 func (bt BinaryTree) PostRange(visitor func(int)) {
 	PostRange(bt.root, visitor)
 }
-func (bt BinaryTree) MidRange(visitor func(int)) {
+func (bt *BinaryTree) MidRange(visitor func(int)) {
 	MidRange(bt.root, visitor)
 }
-func (bt BinaryTree) LevelRange(visitor func(int)) {
+func (bt *BinaryTree) LevelRange(visitor func(int)) {
 	LevelRange(bt.root, visitor)
 }
 
-func (bt BinaryTree) Height() int {
+func (bt *BinaryTree) Height() int {
 	return Height(bt.root)
 }
-func (bt BinaryTree) HeightByLevel() int {
+func (bt *BinaryTree) HeightByLevel() int {
 	return HeightByLevel(bt.root)
 }
 
 //使用中序遍历 寻找前序节点
-func (bt BinaryTree) Predecessor(node *Node) *Node {
+func (bt *BinaryTree) Predecessor(node *Node) *Node {
 	if node == nil {
 		return node //节点==nil return nil
 	}
@@ -73,7 +73,7 @@ func (bt BinaryTree) Predecessor(node *Node) *Node {
 }
 
 //使用中序遍历寻找后续节点
-func (bt BinaryTree) Successor(node *Node) *Node {
+func (bt *BinaryTree) Successor(node *Node) *Node {
 	if node == nil {
 		return node
 	}
@@ -230,7 +230,7 @@ func NewBst() *BinarySearchTree {
 	}
 }
 
-func (bst BinarySearchTree) Add(ele int) {
+func (bst *BinarySearchTree) Add(ele int) {
 	node := &Node{
 		ele: ele,
 	}
@@ -278,13 +278,13 @@ func (bst *BinarySearchTree) Contains(ele int) bool {
 	return bst.node(ele) != nil
 }
 
-func (bst BinarySearchTree) Remove(ele int) {
+func (bst *BinarySearchTree) Remove(ele int) *Node {
 	if bst.root == nil {
-		return
+		return nil
 	}
 	resNode := bst.node(ele)
 	if resNode == nil {
-		return
+		return nil
 	}
 	//度为2的情况 前继节点度==1||==0 left.right.right if left==nil parent.parent
 	var replaceNode *Node
@@ -334,9 +334,10 @@ func (bst BinarySearchTree) Remove(ele int) {
 		}
 	}
 	bst.size--
+	return resNode
 }
 
-func (bst BinarySearchTree) node(ele int) *Node {
+func (bst *BinarySearchTree) node(ele int) *Node {
 	if bst.root == nil {
 		return nil
 	}
