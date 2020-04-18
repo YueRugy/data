@@ -34,7 +34,10 @@ func NewAVL1() *avl1 {
 }
 
 func (avl *avl1) Add(ele int) {
-	node := &Node{
+	node := avl.BinarySearchTree.Add(ele)
+
+	avl.AfterAdd(node)
+	/*node := &Node{
 		ele:    ele,
 		height: 1,
 	}
@@ -65,11 +68,16 @@ func (avl *avl1) Add(ele int) {
 	}
 	node.parent = resultNode
 	avl.size++
-	avl.AfterAdd(node)
+	avl.AfterAdd(node)*/
 }
 
 func (avl *avl1) AfterAdd(node *Node) {
+	if node == nil {
+		return
+	}
 	temp := node.parent
+	node.height = 1
+
 	for temp != nil {
 		if avl.isBalance(temp) { //是否平衡 平衡 更新高度
 			avl.updateHeight(temp)

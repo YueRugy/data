@@ -13,9 +13,22 @@ type BinaryTree struct {
 type Node struct {
 	ele    int
 	height int
+	color  int
 	left   *Node
 	right  *Node
 	parent *Node
+}
+
+//返回兄弟节点
+func (node *Node) sibling() *Node {
+	if node == nil || node.parent == nil {
+		return nil
+	}
+	if reflect.DeepEqual(node, node.parent.left) {
+		return node.parent.right
+	} else {
+		return node.parent.left
+	}
 }
 
 func (bt *BinaryTree) Size() int {
@@ -230,7 +243,7 @@ func NewBst() *BinarySearchTree {
 	}
 }
 
-func (bst *BinarySearchTree) Add(ele int) {
+func (bst *BinarySearchTree) Add(ele int) *Node {
 	node := &Node{
 		ele: ele,
 	}
@@ -238,7 +251,7 @@ func (bst *BinarySearchTree) Add(ele int) {
 	if bst.Empty() {
 		bst.root = node
 		bst.size++
-		return
+		return node
 	}
 	//寻找合适的节点添加
 	resultNode := bst.root //用于保存找到的节点
@@ -249,7 +262,7 @@ func (bst *BinarySearchTree) Add(ele int) {
 		} else if compare(ele, temp.ele) < 0 {
 			temp = temp.left
 		} else {
-			return //相同元素策略 不添加
+			return nil //相同元素策略 不添加
 		}
 	}
 	if compare(ele, resultNode.ele) > 0 {
@@ -257,10 +270,11 @@ func (bst *BinarySearchTree) Add(ele int) {
 	} else if compare(ele, resultNode.ele) < 0 {
 		resultNode.left = node
 	} else {
-		return
+		return nil
 	}
 	node.parent = resultNode
 	bst.size++
+	return node
 }
 
 func (bst *BinarySearchTree) Contains(ele int) bool {
