@@ -8,14 +8,33 @@ import (
 
 func main() {
 
-	arr := [...]int{69, 60, 96, 49, 54, 38, 10, 43, 78, 21, 82, 34, 56, 3, 81, 40}
+	arr := [...]int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
+
+	visitor := func(node *refactorBST.Node) {
+		fmt.Print(strconv.Itoa(node.Ele) + "\t")
+	}
+	rb := refactorBST.NewRedBlackTree()
+	for _, v := range arr {
+		rb.Add(v)
+	}
+	rb.LevelRange(visitor)
+	fmt.Println()
+	fmt.Println(rb.HeightByLevel())
+	//rb.MidRange(visitor)
+	visitor1 := func(node *refactorBST.Node) {
+		if node.Color == 1 {
+			fmt.Print(strconv.Itoa(node.Ele) + "\t")
+		}
+	}
+	rb.LevelRange(visitor1)
+
 	//bst := refactorBST.NewBst()
 	/*	for _, v := range arr {
 			bst.Add(v)
 		}
 	*/
 	//54, 38, 69, 21, 43, 60, 82, 10, 34, 49, 56, 78, 96, 3, 81
-	avl := refactorBST.NewAVL1()
+	/*avl := refactorBST.NewAVL1()
 	for _, v := range arr {
 		avl.Add(v)
 	}
@@ -29,7 +48,7 @@ func main() {
 	avl.LevelRange(visitor)
 	fmt.Println()
 	avl.Remove(49)
-	avl.LevelRange(visitor)
+	avl.LevelRange(visitor)*/
 
 	/*bst.MidRange(func(i int) {
 		//fmt.Print(strconv.Itoa(i) + "\t")

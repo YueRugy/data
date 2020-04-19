@@ -11,9 +11,9 @@ type BinaryTree struct {
 	root *Node
 }
 type Node struct {
-	ele    int
+	Ele    int
 	height int
-	color  int
+	Color  int
 	left   *Node
 	right  *Node
 	parent *Node
@@ -34,6 +34,7 @@ func (node *Node) dire() int {
 	}
 	return left
 }
+
 //返回兄弟节点
 func (node *Node) sibling() *Node {
 	if node == nil || node.parent == nil {
@@ -54,16 +55,16 @@ func (bt *BinaryTree) Empty() bool {
 	return bt.Size() == 0
 }
 
-func (bt *BinaryTree) PreRange(visitor func(int)) {
+func (bt *BinaryTree) PreRange(visitor func(*Node)) {
 	PreRange(bt.root, visitor)
 }
-func (bt BinaryTree) PostRange(visitor func(int)) {
+func (bt BinaryTree) PostRange(visitor func(*Node)) {
 	PostRange(bt.root, visitor)
 }
-func (bt *BinaryTree) MidRange(visitor func(int)) {
+func (bt *BinaryTree) MidRange(visitor func(*Node)) {
 	MidRange(bt.root, visitor)
 }
-func (bt *BinaryTree) LevelRange(visitor func(int)) {
+func (bt *BinaryTree) LevelRange(visitor func(node *Node)) {
 	LevelRange(bt.root, visitor)
 }
 
@@ -73,6 +74,27 @@ func (bt *BinaryTree) Height() int {
 func (bt *BinaryTree) HeightByLevel() int {
 	return HeightByLevel(bt.root)
 }
+
+/*func (bt *BinaryTree) Print() {
+	level := bt.HeightByLevel()
+	levelSize := 1
+	queue := make([]*Node, 0)
+	queue = append(queue, bt.root)
+	for len(queue) != 0 {
+		node := queue[0]
+		queue = queue[1:]
+		if node.left != nil {
+			queue = append(queue, node.left)
+		}
+		if node.right != nil {
+			queue = append(queue, node.right)
+		}
+		levelSize--
+		if levelSize == 0 {
+			levelSize = len(queue)
+		}
+	}
+}*/
 
 //使用中序遍历 寻找前序节点
 func (bt *BinaryTree) Predecessor(node *Node) *Node {
@@ -196,37 +218,37 @@ func Height(node *Node) int {
 }
 
 //前序遍历
-func PreRange(node *Node, visitor func(int)) {
+func PreRange(node *Node, visitor func(*Node)) {
 	if node == nil {
 		return
 	}
-	visitor(node.ele)
+	visitor(node)
 	PreRange(node.left, visitor)
 	PreRange(node.right, visitor)
 }
 
 //后序遍历
-func PostRange(node *Node, visitor func(int)) {
+func PostRange(node *Node, visitor func(*Node)) {
 	if node == nil {
 		return
 	}
 	PostRange(node.left, visitor)
 	PostRange(node.right, visitor)
-	visitor(node.ele)
+	visitor(node)
 }
 
 //中序遍历
-func MidRange(node *Node, visitor func(int)) {
+func MidRange(node *Node, visitor func(*Node)) {
 	if node == nil {
 		return
 	}
 	MidRange(node.left, visitor)
-	visitor(node.ele)
+	visitor(node)
 	MidRange(node.right, visitor)
 }
 
 //层序遍历
-func LevelRange(node *Node, visitor func(int)) {
+func LevelRange(node *Node, visitor func(*Node)) {
 	if node == nil {
 		return
 	}
@@ -234,7 +256,7 @@ func LevelRange(node *Node, visitor func(int)) {
 	queue = append(queue, node)
 	for len(queue) > 0 {
 		n := queue[0]
-		visitor(n.ele)
+		visitor(n)
 		queue = queue[1:]
 		if n.left != nil {
 			queue = append(queue, n.left)
@@ -260,7 +282,7 @@ func NewBst() *BinarySearchTree {
 
 func (bst *BinarySearchTree) Add(ele int) *Node {
 	node := &Node{
-		ele: ele,
+		Ele: ele,
 	}
 
 	if bst.Empty() {
@@ -272,17 +294,17 @@ func (bst *BinarySearchTree) Add(ele int) *Node {
 	resultNode := bst.root //用于保存找到的节点
 	for temp := bst.root; temp != nil; {
 		resultNode = temp
-		if compare(ele, temp.ele) > 0 {
+		if compare(ele, temp.Ele) > 0 {
 			temp = temp.right
-		} else if compare(ele, temp.ele) < 0 {
+		} else if compare(ele, temp.Ele) < 0 {
 			temp = temp.left
 		} else {
 			return nil //相同元素策略 不添加
 		}
 	}
-	if compare(ele, resultNode.ele) > 0 {
+	if compare(ele, resultNode.Ele) > 0 {
 		resultNode.right = node
-	} else if compare(ele, resultNode.ele) < 0 {
+	} else if compare(ele, resultNode.Ele) < 0 {
 		resultNode.left = node
 	} else {
 		return nil
@@ -319,21 +341,24 @@ func (bst *BinarySearchTree) Remove(ele int) *Node {
 	var replaceNode *Node
 	if resNode.left != nil && resNode.right != nil {
 		replaceNode = bst.Predecessor(resNode)
-		resNode.ele = replaceNode.ele //复值 删除前继节点
+		resNode.Ele = replaceNode.Ele //复值 删除前继节点
 		resNode = replaceNode
 	}
-	//度==1
+	//度==1 删除子节点即可
 	if resNode.left != nil && resNode.right == nil {
 		parent := resNode.parent
 		if parent == nil {
 			bst.root = resNode.left
+			resNode.left.parent = nil
 		} else {
-			if reflect.DeepEqual(parent.left, resNode) {
+			resNode.Ele = resNode.left.Ele
+			resNode.left = nil
+			/*if reflect.DeepEqual(parent.left, resNode) {
 				parent.left = resNode.left
 			} else {
 				parent.right = resNode.left
-			}
-			resNode.parent = parent
+			}*/
+			//resNode.left.parent = parent
 		}
 	}
 
@@ -341,12 +366,17 @@ func (bst *BinarySearchTree) Remove(ele int) *Node {
 		parent := resNode.parent
 		if parent == nil {
 			bst.root = resNode.right
+			resNode.right.parent = nil
 		} else {
-			if reflect.DeepEqual(resNode, parent.left) {
+			resNode.Ele = resNode.right.Ele
+			resNode.right = nil
+			/*if reflect.DeepEqual(resNode, parent.left) {
 				parent.left = resNode.right
 			} else {
 				parent.right = resNode.right
 			}
+			resNode.right.parent=parent
+			*/
 		}
 	}
 
@@ -372,9 +402,9 @@ func (bst *BinarySearchTree) node(ele int) *Node {
 	}
 	node := bst.root
 	for node != nil {
-		if compare(ele, node.ele) > 0 {
+		if compare(ele, node.Ele) > 0 {
 			node = node.right
-		} else if compare(ele, node.ele) < 0 {
+		} else if compare(ele, node.Ele) < 0 {
 			node = node.left
 		} else {
 			break

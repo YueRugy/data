@@ -26,7 +26,7 @@ func NewAVL() *AVL {
 
 func (avl *AVL) Add(ele int) {
 	node := &Node{
-		ele:    ele,
+		Ele:    ele,
 		height: 1,
 	}
 	if avl.Empty() {
@@ -40,17 +40,17 @@ func (avl *AVL) Add(ele int) {
 	resultNode := avl.root //用于保存找到的节点
 	for temp := avl.root; temp != nil; {
 		resultNode = temp
-		if compare(ele, temp.ele) > 0 {
+		if compare(ele, temp.Ele) > 0 {
 			temp = temp.right
-		} else if compare(ele, temp.ele) < 0 {
+		} else if compare(ele, temp.Ele) < 0 {
 			temp = temp.left
 		} else {
 			return //相同元素策略 不添加
 		}
 	}
-	if compare(ele, resultNode.ele) > 0 {
+	if compare(ele, resultNode.Ele) > 0 {
 		resultNode.right = node
-	} else if compare(ele, resultNode.ele) < 0 {
+	} else if compare(ele, resultNode.Ele) < 0 {
 		resultNode.left = node
 	} else {
 		return
