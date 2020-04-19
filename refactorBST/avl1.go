@@ -2,7 +2,6 @@ package refactorBST
 
 import (
 	"math"
-	"reflect"
 )
 
 const (
@@ -11,11 +10,6 @@ const (
 	lr
 	rl
 	max = 1
-)
-
-const (
-	left = iota
-	right
 )
 
 type avl1 struct {
@@ -119,7 +113,7 @@ func (avl *avl1) updateHeight(node *Node) {
 func (avl *avl1) reBalance(grand *Node) {
 	parent, pDire := avl.tailChild(grand)
 	node, nDire := avl.tailChild(parent)
-	manner := avl.manner(pDire, nDire)
+	manner := manner(pDire, nDire)
 	switch manner {
 	case ll:
 		avl.ll(grand, parent)
@@ -147,7 +141,7 @@ func (avl *avl1) tailChild(node *Node) (*Node, int) {
 	} else if node.right.height > node.left.height {
 		return node.right, right
 	} else { //如果左右子树高度相同去与父树同方向的子树节点
-		if avl.dire(node) == left {
+		if node.dire() == left {
 			return node.parent.left, left
 		} else {
 			return node.parent.right, right
@@ -155,18 +149,7 @@ func (avl *avl1) tailChild(node *Node) (*Node, int) {
 	}
 }
 
-func (avl *avl1) dire(node *Node) int {
-	if node != nil && node.parent != nil {
-		if reflect.DeepEqual(node, node.parent.left) {
-			return left
-		} else {
-			return right
-		}
-	}
-	return left
-}
-
-func (avl *avl1) manner(dire int, dire2 int) int {
+func manner(dire int, dire2 int) int {
 	if dire == left {
 		if dire2 == left {
 			return ll
@@ -223,7 +206,7 @@ func (avl *avl1) execute(grand *Node, parent *Node) {
 		avl.root = parent
 		parent.parent = nil
 	} else {
-		if avl.dire(grand) == left {
+		if grand.dire() == left {
 			grand.parent.left = parent
 		} else {
 			grand.parent.right = parent

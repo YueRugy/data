@@ -20,8 +20,9 @@ func NewRedBlackTree() *RedBlackTree {
 	}
 }
 
-func (rb *RedBlackTree)Add(ele int)  {
-	rb.BinarySearchTree.Add(ele)
+func (rb *RedBlackTree) Add(ele int) {
+	node := rb.BinarySearchTree.Add(ele)
+	rb.AddAfter(node)
 }
 
 func (rb *RedBlackTree) color(node *Node, color int) *Node {
@@ -48,4 +49,101 @@ func (rb *RedBlackTree) isBlack(node *Node) bool {
 }
 func (rb *RedBlackTree) isRed(node *Node) bool {
 	return rb.colorOf(node) == red
+}
+
+func (rb *RedBlackTree) AddAfter(node *Node) {
+	if node == nil { //相同元素不添加
+		return
+	}
+	if node.parent == nil { //root 节点 染黑即可
+		rb.black(node)
+		return
+	}
+	//默认是红色
+	rb.red(node)
+	//如果父节点是黑色直接添加即可
+	if rb.isBlack(node.parent) {
+		return
+	} else if rb.isRed(node) { //double red 需要处理
+		if rb.isBlack(node.sibling()) { //如果uncle节点==black uncle节点不存在,在红黑树里颜色是black 。这一步祖父节点必然不为nil
+			rb.process(node.parent)
+		} else { //叔父节点是红色存在叔父节点
+			//uncle := node.sibling()
+			//父节点叔父节点染黑
+			rb.black(node.sibling())
+			rb.black(node.parent)
+			rb.red(node.parent.parent)
+			rb.AddAfter(node.parent.parent)
+		}
+	}
+}
+
+func (rb *RedBlackTree) process(node *Node) {
+	direHandle := manner(node.parent.dire(), node.dire())
+	switch direHandle {
+	case ll:
+		rb.ll(node.parent, node.parent.parent)
+	case rr:
+		rb.rr(node.parent, node.parent.parent)
+	case lr:
+		rb.lr(node, node.parent, node.parent.parent)
+	case rl:
+		rb.rl(node, node.parent, node.parent.parent)
+
+	}
+}
+
+func (rb *RedBlackTree) ll(parent *Node, grand *Node) {
+	rb.black(parent)
+	rb.red(grand)
+	parent.right = grand
+	parent.parent = grand.parent
+	if parent.parent == nil {
+		rb.root = parent
+	} else {
+		if grand.dire() == left {
+			parent.parent.left = parent
+		} else {
+			parent.parent.right = parent
+		}
+	}
+	grand.parent = parent
+}
+
+func (rb *RedBlackTree) rr(parent *Node, grand *Node) {
+	rb.red(grand)
+	rb.black(parent)
+	parent.left = grand
+	parent.parent = grand.parent
+	if parent.parent == nil {
+		rb.root = parent
+	} else {
+		if grand.dire() == left {
+			parent.parent.left = parent
+		} else {
+			parent.parent.right = parent
+		}
+	}
+	grand.parent = parent
+}
+
+func (rb *RedBlackTree) lr(node *Node, parent *Node, grand *Node) {
+	//rb.black(node)
+	//rb.red(grand)
+	//node.
+	parent.right = nil
+	node.left = parent
+	grand.left = node
+	node.parent = grand
+	parent.parent = node
+	rb.ll(node, grand)
+}
+
+func (rb *RedBlackTree) rl(node *Node, parent *Node, grand *Node) {
+	parent.left = nil
+	node.right = parent
+	grand.right = node
+	node.parent = grand
+	parent.parent = node
+	rb.rr(node, grand)
 }

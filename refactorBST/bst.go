@@ -19,6 +19,21 @@ type Node struct {
 	parent *Node
 }
 
+const (
+	left = iota
+	right
+)
+
+func (node *Node) dire() int {
+	if node != nil && node.parent != nil {
+		if reflect.DeepEqual(node, node.parent.left) {
+			return left
+		} else {
+			return right
+		}
+	}
+	return left
+}
 //返回兄弟节点
 func (node *Node) sibling() *Node {
 	if node == nil || node.parent == nil {
