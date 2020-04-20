@@ -171,8 +171,90 @@ func (rb *RedBlackTree) Remove(ele int) {
 	rb.afterRemove(node, chNode)
 }
 
-//node 度只可能是1或0 红黑树的删除只可能在度=1或者0 参考二叉树的中序遍历 if left!=nil left.right.right..... else parent.parent 知道parent.parent.left=parent..left
 func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
+
+	if node == nil || node.parent == nil || rb.isRed(node) { //没有找到这个元素或者root==nil ||node 根节点||自身是红色节点
+		return
+	}
+	if rb.isRed(chNode) {
+		rb.black(chNode) //如果替代的节点的子节点是red 染黑即可
+		return
+	}
+	parent := node.parent
+	var sibling *Node
+	deleteLeft := parent.left == nil
+	if deleteLeft {
+		sibling = parent.right
+	} else {
+		sibling = parent.left
+	}
+
+	if deleteLeft { //被删除的节点在左边
+		if rb.isRed(sibling) {
+			rotateRR(parent, sibling)
+			rb.black(sibling)
+			rb.red(parent)
+			sibling = parent.right
+		}
+
+		if rb.isBlack(sibling.right) && rb.isBlack(sibling.left) {
+			flag := rb.isBlack(parent)
+			rb.black(parent)
+			rb.red(sibling)
+			if flag {
+				rb.afterRemove(parent, nil)
+			}
+		} else {
+			if rb.isBlack(sibling.right) {
+				rotateLL(sibling, sibling.left)
+				sibling = parent.left
+			}
+
+			rotateRR(parent, sibling)
+			rb.color(sibling, rb.colorOf(parent))
+			rb.black(parent)
+			rb.black(sibling.right)
+		}
+
+	} else {                   //被删除的节点在右边
+		if rb.isRed(sibling) { //兄弟节点是红色
+			rotateLL(parent, sibling)
+			rb.black(sibling)
+			rb.red(parent)
+			sibling = parent.left
+		}
+
+		//兄弟节点必然是黑色
+		//兄弟节点不可以借
+		if rb.isBlack(sibling.left) && rb.isBlack(sibling.right) { //下溢 合并
+			pBlock := rb.isBlack(parent)
+			rb.black(parent)
+			rb.red(sibling)
+			if pBlock {
+				rb.afterRemove(parent, nil)
+			}
+		} else { //兄弟节点必然有一个红色节点
+			if rb.isBlack(sibling.left) {
+				rotateRR(sibling, sibling.right)
+				sibling = parent.left
+			}
+
+			rotateLL(parent, sibling)
+			rb.color(sibling, rb.colorOf(parent)) //旋转后 兄弟节点染成同原来父节点一样颜色
+			rb.black(parent)
+			rb.black(sibling.left)
+		}
+
+		/*if rb.isBlack(sibling.left) {
+			rotateRR(sibling, sibling.right)
+		}*/
+
+	}
+
+}
+
+//node 度只可能是1或0 红黑树的删除只可能在度=1或者0 参考二叉树的中序遍历 if left!=nil left.right.right..... else parent.parent 知道parent.parent.left=parent..left
+func (rb *RedBlackTree) afterRemove1(node *Node, chNode *Node) {
 	if node == nil || node.parent == nil || rb.isRed(node) { //没有找到这个元素或者root==nil ||node 根节点||自身是红色节点
 		return
 	}
@@ -218,10 +300,18 @@ func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
 					if rb.isRed(parent) {
 						rb.black(parent)
 						rb.red(sibling)
+					} else {
+						rb.black(parent)
+						rb.red(sibling)
+						rb.afterRemove(parent, sibling)
 					}
 				}
 			} else {
-
+				//parent ll
+				parent.left = sibling.right
+				sibling.right.parent = parent
+				sibling.right = nil
+				sibling.right = parent
 			}
 		} else if sibling := parent.right; sibling != nil {
 			if rb.isBlack(sibling) {
@@ -258,6 +348,10 @@ func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
 					if rb.isRed(parent) {
 						rb.black(parent)
 						rb.red(sibling)
+					} else {
+						rb.black(parent)
+						rb.red(sibling)
+						rb.afterRemove(parent, sibling)
 					}
 				}
 			} else {
@@ -329,3 +423,22 @@ func (rb *RedBlackTree) Remove(ele int) {
 	}
 
 }*/
+func rotateLL(p, c *Node) {
+	p.left = c.right
+	if c.right != nil {
+		c.right.parent = p
+	}
+	c.right = p
+	c.parent = p.parent.parent
+	p.parent = c
+}
+
+func rotateRR(p, c *Node) {
+	p.right = c.left
+	if c.left != nil {
+		c.left.parent = p
+	}
+	c.left = p
+	c.parent = p.parent.parent
+	p.parent = c
+}
