@@ -341,24 +341,21 @@ func (bst *BinarySearchTree) Remove(ele int) *Node {
 	var replaceNode *Node
 	if resNode.left != nil && resNode.right != nil {
 		replaceNode = bst.Predecessor(resNode)
-		resNode.Ele = replaceNode.Ele //复值 删除前继节点
+		resNode.Ele = replaceNode.Ele //赋值 删除前继节点
 		resNode = replaceNode
 	}
 	//度==1 删除子节点即可
 	if resNode.left != nil && resNode.right == nil {
-		parent := resNode.parent
-		if parent == nil {
+		if resNode.parent == nil {
 			bst.root = resNode.left
 			resNode.left.parent = nil
 		} else {
-			resNode.Ele = resNode.left.Ele
-			resNode.left = nil
-			/*if reflect.DeepEqual(parent.left, resNode) {
-				parent.left = resNode.left
+			if resNode.dire() == left {
+				resNode.parent.left = resNode.left
 			} else {
-				parent.right = resNode.left
-			}*/
-			//resNode.left.parent = parent
+				resNode.parent.right = resNode.left
+			}
+			resNode.left.parent = resNode.parent
 		}
 	}
 
@@ -368,8 +365,14 @@ func (bst *BinarySearchTree) Remove(ele int) *Node {
 			bst.root = resNode.right
 			resNode.right.parent = nil
 		} else {
-			resNode.Ele = resNode.right.Ele
-			resNode.right = nil
+			if resNode.dire() == left {
+				resNode.parent.left = resNode.right
+			} else {
+				resNode.parent.right = resNode.right
+			}
+			resNode.right.parent = resNode.parent
+			//resNode.Ele = resNode.right.Ele
+			//resNode.right = nil
 			/*if reflect.DeepEqual(resNode, parent.left) {
 				parent.left = resNode.right
 			} else {
