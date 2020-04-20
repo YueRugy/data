@@ -30,7 +30,9 @@ func (rb *RedBlackTree) color(node *Node, color int) *Node {
 		return node
 	}
 	node.Color = color
+
 	return node
+
 }
 func (rb *RedBlackTree) red(node *Node) {
 	rb.color(node, red)
