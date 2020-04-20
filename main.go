@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/data/refactorBST"
 	"strconv"
+
+	"github.com/data/refactorBST"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 	fmt.Println()
 	test2(arr)
 
+	test3(arr)
 	//bst := refactorBST.NewBst()
 	/*	for _, v := range arr {
 			bst.Add(v)
@@ -84,4 +86,10 @@ func test1(arr []int) {
 		}
 	}
 	rb.LevelRange(visitor1)
+}
+func test3(arr []int) {
+	for _, v := range arr {
+		fmt.Print(strconv.Itoa(v) + "\t")
+	}
+	fmt.Println()
 }

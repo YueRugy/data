@@ -84,7 +84,7 @@ func (avl *avl1) AfterAdd(node *Node) {
 }
 
 func (avl *avl1) Remove(ele int) {
-	node := avl.BinarySearchTree.Remove(ele)
+	node,_ := avl.BinarySearchTree.Remove(ele)
 	avl.removeAfter(node)
 }
 

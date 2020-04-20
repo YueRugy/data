@@ -165,3 +165,167 @@ func (rb *RedBlackTree) rl(node *Node, parent *Node, grand *Node) {
 	parent.parent = node
 	rb.rr(node, grand)
 }
+
+func (rb *RedBlackTree) Remove(ele int) {
+	node, chNode := rb.BinarySearchTree.Remove(ele)
+	rb.afterRemove(node, chNode)
+}
+
+//node 度只可能是1或0 红黑树的删除只可能在度=1或者0 参考二叉树的中序遍历 if left!=nil left.right.right..... else parent.parent 知道parent.parent.left=parent..left
+func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
+	if node == nil || node.parent == nil || rb.isRed(node) { //没有找到这个元素或者root==nil ||node 根节点||自身是红色节点
+		return
+	}
+
+	if rb.isRed(chNode) {
+		rb.black(chNode) //如果替代的节点的子节点是red 染黑即可
+	} else { //下溢删除的是黑色节点所以一定有个兄弟节点（rbTree）是黑色
+		//兄弟节点(b tree)能够借给我元素 红黑树逻辑上转换成b树 将黑色节点和它的红色节点合成一个超级节点
+		//所以兄弟节点(二叉树）的颜色必然是黑色
+		parent := node.parent
+		if sibling := parent.left; sibling != nil {
+			if rb.isBlack(sibling) {
+				if nephew := sibling.left; nephew != nil { //ll 先判断同方向的一遍可能值需要一次旋转就可以
+					parent.left = sibling.right
+					if sibling.right != nil {
+						sibling.right.parent = parent
+					}
+					sibling.right = parent
+					sibling.parent = parent.parent
+					parent.parent = sibling
+					if sibling.parent == nil { //旋转可能导致根节点变化
+						rb.root = sibling
+					}
+					sibling.Color = parent.Color
+					rb.black(parent)
+					rb.black(nephew)
+				} else if nephew := sibling.right; nephew != nil && sibling.left == nil { //lr
+					nephew.parent = parent //rr
+					parent.left = nephew
+					nephew.left = sibling
+					sibling.parent = nephew
+					//ll
+					nephew.parent = parent.parent
+					if nephew.parent == nil {
+						rb.root = nephew
+					}
+					nephew.right = parent
+					parent.parent = nephew
+					nephew.Color = parent.Color
+					rb.black(parent)
+					rb.black(sibling)
+				} else {
+					if rb.isRed(parent) {
+						rb.black(parent)
+						rb.red(sibling)
+					}
+				}
+			} else {
+
+			}
+		} else if sibling := parent.right; sibling != nil {
+			if rb.isBlack(sibling) {
+				if nephew := sibling.right; nephew != nil { //rr先判断同方向的一遍可能值需要一次旋转就可以
+					parent.right = sibling.left
+					if sibling.left != nil {
+						sibling.left.parent = parent
+					}
+					sibling.left = parent
+					sibling.parent = parent.parent
+					parent.parent = sibling
+					if sibling.parent == nil { //旋转可能导致根节点变化
+						rb.root = sibling
+					}
+					sibling.Color = parent.Color
+					rb.black(parent)
+					rb.black(nephew)
+				} else if nephew := sibling.left; nephew != nil && sibling.right == nil { //rl
+					nephew.parent = parent //rr
+					parent.right = nephew
+					nephew.right = sibling
+					sibling.parent = nephew
+					//ll
+					nephew.parent = parent.parent
+					if nephew.parent == nil {
+						rb.root = nephew
+					}
+					nephew.left = parent
+					parent.parent = nephew
+					nephew.Color = parent.Color
+					rb.black(parent)
+					rb.black(sibling)
+				} else {
+					if rb.isRed(parent) {
+						rb.black(parent)
+						rb.red(sibling)
+					}
+				}
+			} else {
+
+			}
+		}
+	}
+
+}
+
+/*
+func (rb *RedBlackTree) Remove(ele int) {
+	node := rb.node(ele)
+	if node == nil {
+		return
+	}
+	if node.left != nil && node.right != nil {
+		replaceNode := rb.Predecessor(node)
+		if replaceNode == nil {
+			return
+		}
+		node.Ele = replaceNode.Ele
+		node = replaceNode
+	}
+
+	if node.left != nil && node.right == nil {
+		if node.parent == nil {
+			rb.root = node.left
+			rb.black(node.left)
+			node.left.parent = nil
+		} else {
+			if node.dire() == left {
+				node.parent.left = node.left
+			} else {
+				node.parent.right = node.left
+			}
+			node.left.parent = node.parent
+			rb.black(node.left)
+		}
+	} else if node.right != nil && node.left == nil {
+		if node.parent == nil {
+			rb.root = node.right
+			rb.black(node.right)
+			node.right.parent = nil
+		} else {
+			if node.dire() == left {
+				node.parent.left = node.right
+			} else {
+				node.parent.right = node.right
+			}
+			node.right.parent = node.parent
+			rb.black(node.right)
+		}
+	} else if node.right == nil && node.left == nil {
+		if node.parent == nil {
+			rb.root = nil
+			return
+		} else {
+			if rb.isRed(node) {
+				if node.dire() == left {
+					node.parent.left = nil
+				} else {
+					node.parent.right = nil
+				}
+			} else {
+
+			}
+		}
+	}
+
+}*/

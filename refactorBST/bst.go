@@ -329,13 +329,14 @@ func (bst *BinarySearchTree) Contains(ele int) bool {
 	return bst.node(ele) != nil
 }
 
-func (bst *BinarySearchTree) Remove(ele int) *Node {
+func (bst *BinarySearchTree) Remove(ele int) (*Node ,*Node){
 	if bst.root == nil {
-		return nil
+		return nil,nil
 	}
 	resNode := bst.node(ele)
+	var chNode *Node
 	if resNode == nil {
-		return nil
+		return nil,nil
 	}
 	//度为2的情况 前继节点度==1||==0 left.right.right if left==nil parent.parent
 	var replaceNode *Node
@@ -346,6 +347,7 @@ func (bst *BinarySearchTree) Remove(ele int) *Node {
 	}
 	//度==1 删除子节点即可
 	if resNode.left != nil && resNode.right == nil {
+		chNode=resNode.left
 		if resNode.parent == nil {
 			bst.root = resNode.left
 			resNode.left.parent = nil
@@ -360,8 +362,8 @@ func (bst *BinarySearchTree) Remove(ele int) *Node {
 	}
 
 	if resNode.left == nil && resNode.right != nil {
-		parent := resNode.parent
-		if parent == nil {
+		chNode=resNode.right
+		if resNode.parent == nil {
 			bst.root = resNode.right
 			resNode.right.parent = nil
 		} else {
@@ -396,7 +398,7 @@ func (bst *BinarySearchTree) Remove(ele int) *Node {
 		}
 	}
 	bst.size--
-	return resNode
+	return resNode,chNode
 }
 
 func (bst *BinarySearchTree) node(ele int) *Node {
