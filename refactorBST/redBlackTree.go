@@ -429,16 +429,36 @@ func rotateLL(p, c *Node) {
 		c.right.parent = p
 	}
 	c.right = p
-	c.parent = p.parent.parent
+	if p.parent != nil {
+		c.parent = p.parent
+		flag := p.dire() == left
+		if flag {
+			p.parent.left = c
+		} else {
+			p.parent.right = c
+		}
+	}
 	p.parent = c
 }
 
 func rotateRR(p, c *Node) {
+
 	p.right = c.left
 	if c.left != nil {
 		c.left.parent = p
 	}
 	c.left = p
-	c.parent = p.parent.parent
+	if p.parent != nil {
+		c.parent = p.parent
+		flag := p.dire() == left
+		if flag {
+			p.parent.left = c
+		} else {
+			p.parent.right = c
+		}
+	} else {
+		c.parent = nil
+	}
+
 	p.parent = c
 }
