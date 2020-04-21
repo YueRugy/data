@@ -19,6 +19,43 @@ type Hash struct {
 	bucket []*Node
 }
 
+func (hash *Hash) Size() int {
+	return hash.size
+}
+
+func (hash *Hash) Empty() bool {
+	return hash.Size() == 0
+}
+
+func (hash *Hash) ContainsKey(key int) bool {
+	index := hash.index(key)
+	root := hash.bucket[index]
+	if root == nil {
+		return false
+	}
+	node := hash.getNode(root, key)
+	return node != nil
+	//fmt.Println(root)
+}
+
+func (hash *Hash) getNode(root *Node, key int) *Node {
+	hashcode := hashCode(key)
+	for temp := root; temp != nil; {
+		if compareHashcode(hashcode, temp.code) > 0 {
+			temp = temp.right
+		} else if compareHashcode(hashcode, temp.code) < 0 {
+			temp = temp.left
+		} else {
+			return temp
+		}
+	}
+	return nil
+}
+
+func compareHashcode(h1, h2 int) int {
+	return h1 - h2
+}
+
 func (hash *Hash) Put(k, v int) {
 	node := &Node{
 		k:    k,
@@ -27,19 +64,16 @@ func (hash *Hash) Put(k, v int) {
 	}
 	index := hash.index(k)
 	root := hash.bucket[index]
-	fmt.Printf("root  %p,bucket %p", root, hash.bucket[index])
 	if root == nil {
 		add(&root, node)
 		hash.bucket[index] = root
 		hash.size++
 	} else {
-
 		oldNode := add(&root, node)
 		if oldNode != nil {
 			hash.size++
 			hash.bucket[index] = root
 		}
-		fmt.Println()
 	}
 
 }
@@ -170,7 +204,7 @@ func compare(h1, h2 int, n1, n2 *Node) int {
 	if res != 0 {
 		return res
 	}
-	return n1.v - n2.v
+	return n1.k - n2.k
 }
 
 func sibling(node *Node) *Node {
@@ -232,10 +266,12 @@ func main() {
 	arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
 	//test1(arr)
 	hash := NewHash()
-	for _, v := range arr {
-		hash.Put(0, v)
+	for index, v := range arr {
+		hash.Put(16*index, v)
 	}
-	f1(hash.bucket[0])
+	fmt.Println(hash.ContainsKey(16))
+	fmt.Println(hash.ContainsKey(1))
+	//f1(hash.bucket[0])
 	//fmt.Println(hash)
 }
 
