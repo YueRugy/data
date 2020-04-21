@@ -10,8 +10,13 @@ import (
 func main() {
 
 	arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
+	fmt.Println(len(arr))
 
-	test1(arr)
+	//fmt.Println(8&(8-1))
+
+	//70 24  89  9 33 75   94    7    22   28  55   72   86   18   23   30    80
+	//9       33      75      18      23      30      80
+	//test1(arr)
 	/*fmt.Println()
 	test2(arr)
 
@@ -76,9 +81,9 @@ func test1(arr []int) {
 	for _, v := range arr {
 		rb.Add(v)
 	}
-/*	rb.LevelRange(visitor)
-	fmt.Println()
-	fmt.Println(rb.HeightByLevel())*/
+	/*	rb.LevelRange(visitor)
+		fmt.Println()
+		fmt.Println(rb.HeightByLevel())*/
 	//rb.MidRange(visitor)
 	visitor1 := func(node *refactorBST.Node) {
 		if node.Color == 1 {
@@ -87,8 +92,8 @@ func test1(arr []int) {
 	}
 	//rb.LevelRange(visitor1)
 
-	rb.Remove(80)
-	rb.Remove(70)
+	//rb.Remove(80)
+	//rb.Remove(70)
 
 	rb.LevelRange(visitor)
 	fmt.Println()
