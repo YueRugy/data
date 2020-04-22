@@ -173,7 +173,7 @@ func (rb *RedBlackTree) Remove(ele int) {
 
 func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
 
-	if node == nil || node.parent == nil || rb.isRed(node) { //没有找到这个元素或者root==nil ||node 根节点||自身是红色节点
+	if node == nil || rb.isRed(node) { //没有找到这个元素或者root==nil ||node 根节点||自身是红色节点
 		return
 	}
 	if rb.isRed(chNode) {
@@ -194,6 +194,9 @@ func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
 			rotateRR(parent, sibling)
 			rb.black(sibling)
 			rb.red(parent)
+			if sibling.parent == nil {
+				rb.root = sibling
+			}
 			sibling = parent.right
 		}
 
@@ -221,6 +224,9 @@ func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
 			rotateLL(parent, sibling)
 			rb.black(sibling)
 			rb.red(parent)
+			if sibling.parent == nil {
+				rb.root = sibling
+			}
 			sibling = parent.left
 		}
 

@@ -33,12 +33,12 @@ func (hash *Hash) ContainsKey(key int) bool {
 	if root == nil {
 		return false
 	}
-	node := hash.getNode(root, key)
+	node := hash.GetNode(root, key)
 	return node != nil
 	//fmt.Println(root)
 }
 
-func (hash *Hash) getNode(root *Node, key int) *Node {
+func (hash *Hash) GetNode(root *Node, key int) *Node {
 	hashcode := hashCode(key)
 	for temp := root; temp != nil; {
 		if compareHashcode(hashcode, temp.code) > 0 {
@@ -50,6 +50,159 @@ func (hash *Hash) getNode(root *Node, key int) *Node {
 		}
 	}
 	return nil
+}
+
+func (hash *Hash) Remove(key int) {
+	index := hash.index(key)
+	if hash.bucket[index] == nil {
+		return
+	}
+	node := hash.GetNode(hash.bucket[index], key)
+	if node == nil {
+		return
+	}
+	node, childNode := remove(&hash.bucket[index], node)
+	afterRemove(&hash.bucket[index], node, childNode)
+	hash.size--
+
+}
+
+func afterRemove(root **Node, node, child *Node) {
+
+	if node == nil || node.isRed() {
+		return
+	}
+
+	if child.isBlack() {
+		child.black()
+		return
+	}
+
+	parent := node.parent
+	deleteLeft := parent.left == nil
+	var sibling *Node
+	if deleteLeft {
+		sibling = parent.right
+	} else {
+		sibling = parent.left
+	}
+
+	if deleteLeft {
+		if sibling.isRed() {
+			rotateRR(parent, sibling)
+			sibling.black()
+			parent.red()
+			if sibling.parent == nil {
+				*root = sibling
+			}
+			sibling = parent.right
+		}
+
+		if sibling.left.isBlack() && sibling.right.isBlack() {
+			//下溢 合并
+			pBlack := parent.isBlack()
+			parent.black()
+			sibling.red()
+			if pBlack {
+				afterRemove(root, parent, nil)
+			}
+		} else {
+			//兄弟节点必然有一个红色节点
+			if sibling.right.isBlack() {
+				rotateLL(sibling.left, sibling)
+			}
+			rotateRR(parent, sibling)
+			if sibling.parent == nil {
+				*root = sibling
+			}
+			sibling.color = parent.color
+			parent.black()
+			sibling.right.black()
+		}
+
+	} else {
+		if sibling.isRed() {
+			rotateLL(parent, sibling)
+			sibling.black()
+			parent.red()
+			if sibling.parent == nil {
+				*root = sibling
+			}
+			sibling = parent.left
+		} else {
+			if sibling.left.isBlack() {
+				rotateRR(sibling, sibling.right)
+			}
+			rotateLL(parent, sibling)
+			if sibling.parent == nil {
+				*root = sibling
+			}
+			sibling.color = parent.color
+			parent.black()
+			sibling.left.black()
+		}
+	}
+
+}
+
+func remove(root **Node, node *Node) (*Node, *Node) {
+
+	resNode := node
+	var childNode *Node
+	if node.left != nil && node.right != nil {
+		resNode = predecessor(node)
+		node.code = resNode.code
+		node.k = resNode.k
+		node.v = resNode.v
+	}
+
+	if node.left != nil && node.right == nil {
+		childNode = node.left
+		if node.parent == nil {
+			node.left.parent = nil
+			*root = node.left
+			return node, childNode
+		} else
+		if node.dire() == left {
+			node.parent.left = node.left
+		} else {
+			node.parent.right = node.left
+		}
+		node.left.parent = node.parent
+	} else if node.right != nil && node.left == nil {
+		if node.parent == nil {
+			*root = node.right
+			node.right.parent = nil
+			return node, childNode
+		} else {
+			if node.dire() == left {
+				node.parent.left = node.right
+			} else {
+				node.parent.right = node.right
+			}
+			node.right.parent = node.parent
+		}
+	} else {
+		if node.parent == nil {
+			*root = nil
+		} else {
+			if node.dire() == left {
+				node.parent.left = nil
+			} else {
+				node.parent.right = nil
+			}
+		}
+	}
+	return node, childNode
+}
+
+func predecessor(node *Node) *Node {
+	res := node.left
+	for temp := node.left; temp != nil; {
+		res = temp
+		temp = temp.right
+	}
+	return res
 }
 
 func compareHashcode(h1, h2 int) int {
@@ -195,7 +348,6 @@ func afterAdd(root **Node, node *Node) {
 			*root = parent
 			parent.parent = nil
 		}
-		fmt.Println()
 	}
 }
 
@@ -263,14 +415,20 @@ func rotateRR(p, c *Node) {
 }
 
 func main() {
-	arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
-	//test1(arr)
+
 	hash := NewHash()
-	for index, v := range arr {
-		hash.Put(16*index, v)
-	}
-	fmt.Println(hash.ContainsKey(16))
-	fmt.Println(hash.ContainsKey(1))
+	hash.Put(0, 0)
+	hash.Remove(0)
+	fmt.Println()
+
+	//arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
+	////test1(arr)
+	//hash := NewHash()
+	//for index, v := range arr {
+	//	hash.Put(16*index, v)
+	//}
+	//fmt.Println(hash.ContainsKey(16))
+	//fmt.Println(hash.ContainsKey(1))
 	//f1(hash.bucket[0])
 	//fmt.Println(hash)
 }
