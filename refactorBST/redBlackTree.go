@@ -214,6 +214,9 @@ func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
 			}
 
 			rotateRR(parent, sibling)
+			if sibling.parent == nil {
+				rb.root = sibling
+			}
 			rb.color(sibling, rb.colorOf(parent))
 			rb.black(parent)
 			rb.black(sibling.right)
@@ -246,6 +249,9 @@ func (rb *RedBlackTree) afterRemove(node *Node, chNode *Node) {
 			}
 
 			rotateLL(parent, sibling)
+			if sibling.parent == nil {
+				rb.root = sibling
+			}
 			rb.color(sibling, rb.colorOf(parent)) //旋转后 兄弟节点染成同原来父节点一样颜色
 			rb.black(parent)
 			rb.black(sibling.left)
