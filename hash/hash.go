@@ -73,7 +73,7 @@ func afterRemove(root **Node, node, child *Node) {
 		return
 	}
 
-	if child.isBlack() {
+	if child.isRed() {
 		child.black()
 		return
 	}
@@ -417,9 +417,11 @@ func rotateRR(p, c *Node) {
 func main() {
 
 	hash := NewHash()
-	hash.Put(0, 0)
-	hash.Remove(0)
-	fmt.Println()
+	test3(hash)
+	test4(hash)
+	//hash.Put(0, 0)
+	//hash.Remove(0)
+	//fmt.Println()
 
 	//arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
 	////test1(arr)
@@ -431,6 +433,20 @@ func main() {
 	//fmt.Println(hash.ContainsKey(1))
 	//f1(hash.bucket[0])
 	//fmt.Println(hash)
+}
+
+func test4(hash *Hash) {
+	for i := 0; i < 16; i++ {
+		hash.Remove(i << 4)
+		f1(hash.bucket[0])
+	}
+}
+
+func test3(hash *Hash) {
+	for i := 0; i < 16; i++ {
+		hash.Put(i<<4, i)
+	}
+	//f1(hash.bucket[0])
 }
 
 func test2(x, y *int) {
@@ -456,11 +472,11 @@ func test1(arr []int) {
 
 func f1(root *Node) {
 	visitor := func(node *Node) {
-		fmt.Print(strconv.Itoa(node.v) + "\t")
+		fmt.Print(strconv.Itoa(node.k) + "\t")
 	}
 	visitor1 := func(node *Node) {
 		if node.color == red {
-			fmt.Print(strconv.Itoa(node.v) + "\t")
+			fmt.Print(strconv.Itoa(node.k) + "\t")
 		}
 	}
 	LevelRange(root, visitor)
