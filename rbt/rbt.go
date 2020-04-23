@@ -1,4 +1,4 @@
-package main
+package rbt
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ const (
 )
 
 type Node struct {
-	k, v, code, color   int
+	K, v, code, Color   int
 	left, right, parent *Node
 }
 
@@ -31,7 +31,7 @@ func NewRedBlackTree() *RedBlackTree {
 
 func (node *Node) Compare(c1, c2 int, n *Node) int {
 	if c1 == c2 {
-		return node.k - n.k
+		return node.K - n.K
 	}
 	return c1 - c2
 }
@@ -71,10 +71,10 @@ func (node *Node) dire() int {
 }
 
 func (node *Node) red() {
-	node.color = red
+	node.Color = red
 }
 func (node *Node) black() {
-	node.color = black
+	node.Color = black
 }
 
 func (node *Node) isBlack() bool {
@@ -91,14 +91,14 @@ func (node *Node) colorOf() int {
 	if node == nil {
 		return black
 	}
-	return node.color
+	return node.Color
 }
 
 func (node *Node) coloring(color int) {
 	if node == nil {
 		return
 	}
-	node.color = color
+	node.Color = color
 }
 
 func (node *Node) sibling() *Node {
@@ -113,10 +113,10 @@ func (node *Node) sibling() *Node {
 
 //-------------------------------------------------
 
-func (rbt *RedBlackTree) Remove(k int) {
+func (rbt *RedBlackTree) Remove(k int) bool {
 	node := rbt.node(k)
 	if node == nil {
-		return
+		return false
 	}
 
 	var childNode *Node = nil
@@ -124,7 +124,7 @@ func (rbt *RedBlackTree) Remove(k int) {
 	if node.left != nil && node.right != nil {
 		preNode := node.Predecessor()
 		node.code = preNode.code
-		node.k = preNode.k
+		node.K = preNode.K
 		node.v = preNode.v
 		node = preNode
 	}
@@ -167,6 +167,7 @@ func (rbt *RedBlackTree) Remove(k int) {
 	}
 	rbt.size--
 	rbt.afterRemove(node, childNode, dire)
+	return true
 }
 
 func (rbt *RedBlackTree) afterRemove(node, childNode *Node, dire int) {
@@ -215,7 +216,7 @@ func (rbt *RedBlackTree) afterRemove(node, childNode *Node, dire int) {
 			if sibling.parent == nil {
 				rbt.root = sibling
 			}
-			sibling.coloring(parent.color)
+			sibling.coloring(parent.Color)
 			parent.black()
 			sibling.right.black()
 		}
@@ -247,18 +248,18 @@ func (rbt *RedBlackTree) afterRemove(node, childNode *Node, dire int) {
 			if sibling.parent == nil {
 				rbt.root = sibling
 			}
-			sibling.coloring(parent.color)
+			sibling.coloring(parent.Color)
 			parent.black()
 			sibling.left.black()
 		}
 	}
 }
 
-func (rbt *RedBlackTree) Add(node *Node) {
+func (rbt *RedBlackTree) Add(node *Node) bool {
 	if rbt.root == nil {
 		rbt.root = node
 		rbt.size++
-		return
+		return true
 	}
 
 	//寻找合适的节点添加
@@ -284,11 +285,13 @@ func (rbt *RedBlackTree) Add(node *Node) {
 		node.parent = resNode
 	} else {
 		resNode.v = node.v
-		resNode.k = node.k
+		resNode.K = node.K
 		resNode.code = node.code
+		return false
 	}
 	rbt.size++
 	rbt.addAfter(node)
+	return true
 	/*for temp := rbt.root; temp != nil; {
 		flag := node.Compare(node.code, temp.code, temp)
 		if flag > 0 {
@@ -365,7 +368,7 @@ func (rbt *RedBlackTree) ContainK(k int) bool {
 func (rbt *RedBlackTree) node(k int) *Node {
 	if rbt.root != nil {
 		for temp := rbt.root; temp != nil; {
-			flag := rbt.compare(k, temp.k)
+			flag := rbt.compare(k, temp.K)
 			if flag > 0 {
 				temp = temp.right
 			} else if flag < 0 {
@@ -461,20 +464,20 @@ func rotateRR(g, p *Node) {
 }
 
 //--------------------------------------------
-func main() {
-	//fmt.Println(left, black, right, red, unknown)
-
-	//arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
-	//testAdd(arr)
-	testRemove()
-}
+//func main() {
+//	//fmt.Println(left, black, right, red, unknown)
+//
+//	//arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
+//	//testAdd(arr)
+//	testRemove()
+//}
 
 func visitor(node *Node) {
-	fmt.Print(strconv.Itoa(node.k) + "\t")
+	fmt.Print(strconv.Itoa(node.K) + "\t")
 }
 func visitor1(node *Node) {
-	if node.color == red {
-		fmt.Print(strconv.Itoa(node.k) + "\t")
+	if node.Color == red {
+		fmt.Print(strconv.Itoa(node.K) + "\t")
 	}
 }
 
@@ -482,7 +485,7 @@ func testAdd(arr []int) {
 	rbt := NewRedBlackTree()
 	for _, v := range arr {
 		node := &Node{
-			k: v,
+			K: v,
 			v: v,
 		}
 		rbt.Add(node)
@@ -497,7 +500,7 @@ func testRemove() {
 	rbt := NewRedBlackTree()
 	for i := 0; i < 16; i++ {
 		node := &Node{
-			k: i << 4,
+			K: i << 4,
 			v: i,
 		}
 		rbt.Add(node)
