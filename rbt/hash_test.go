@@ -19,21 +19,35 @@ func visitorKV(k, v int) {
 //}
 func TestHash_Put(t *testing.T) {
 	hash := NewHash()
-	for i := 0; i < 16; i++ {
+	for i := 0; i < 8; i++ {
 		hash.Put(i<<4, i)
 	}
-	rbt := hash.bucket[0]
-	rbt.LevelRange(visitor)
-	fmt.Println()
-	fmt.Println(rbt.Height())
-	rbt.LevelRange(visitor1)
-	fmt.Println()
-	fmt.Println(hash.Size())
-	hash.Put(0, 123)
-	fmt.Println(hash.Size())
+	if len(hash.bucket) == defaultCap {
+		t.Log("success")
+	} else {
+		t.Error("err")
+	}
+	for i := 8; i < 16; i++ {
+		hash.Put(i<<4, i)
+	}
+	if len(hash.bucket) == (defaultCap << 1) {
+		t.Log("success")
+	} else {
+		t.Error("err")
+	}
+	//rbt := hash.bucket[0]
+	//rbt.LevelRange(visitor)
+	//fmt.Println()
+	//fmt.Println(rbt.Height())
+	//rbt.LevelRange(visitor1)
+	//fmt.Println()
+	//fmt.Println(hash.Size())
+	//hash.Put(0, 123)
+	//fmt.Println(hash.Size())
 }
 func TestHash_Empty(t *testing.T) {
 
+	//fmt.Println(1 << 1)
 }
 func TestHash_Size(t *testing.T) {
 
