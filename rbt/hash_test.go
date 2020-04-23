@@ -5,6 +5,10 @@ import (
 	"testing"
 )
 
+func visitorKV(k, v int) {
+	fmt.Printf("k:%d  v:%d   ", k, v)
+}
+
 //func visitor(node *Node) {
 //	fmt.Print(strconv.Itoa(node.K) + "\t")
 //}
@@ -80,16 +84,23 @@ func TestHash_ContainsValue(t *testing.T) {
 	for i := 0; i < 16; i++ {
 		hash.Put(i<<4, i)
 	}
-	b1:=hash.ContainsValue(1)
-	b2:=hash.ContainsValue(178)
-	if b1{
+	b1 := hash.ContainsValue(1)
+	b2 := hash.ContainsValue(178)
+	if b1 {
 		t.Log("success")
-	}else {
+	} else {
 		t.Error("failed")
 	}
-	if !b2{
+	if !b2 {
 		t.Log("success")
-	}else {
+	} else {
 		t.Error("failed")
 	}
+}
+func TestHash_Traversal(t *testing.T) {
+	hash := NewHash()
+	for i := 0; i < 16; i++ {
+		hash.Put(i<<4, i)
+	}
+	hash.Traversal(visitorKV)
 }

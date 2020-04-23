@@ -11,7 +11,7 @@ type Hash struct {
 }
 
 const (
-	defaultCap = 2 << 4
+	defaultCap = 1 << 4
 )
 
 func NewHash() *Hash {
@@ -62,6 +62,33 @@ func (hash *Hash) ContainsValue(v int) bool {
 		}
 	}
 	return false
+}
+
+func (hash *Hash) Traversal(v func(k, v int)) {
+	if hash == nil || hash.Empty() {
+		return
+	}
+
+	for i := 0; i < len(hash.bucket); i++ {
+		rbt := hash.bucket[i]
+		if rbt == nil || rbt.root == nil {
+			continue
+		}
+
+		queue := make([]*Node, 0)
+		queue = append(queue, rbt.root)
+		for len(queue) > 0 {
+			node := queue[0]
+			v(node.K, node.v)
+			queue = queue[1:]
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+	}
 }
 
 func (hash *Hash) Get(k int) (int, error) {
