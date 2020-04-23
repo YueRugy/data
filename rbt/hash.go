@@ -36,6 +36,34 @@ func (hash *Hash) ContainsKey(k int) bool {
 	return rbt.node(k) != nil
 }
 
+func (hash *Hash) ContainsValue(v int) bool {
+	if hash == nil || hash.Empty() {
+		return false
+	}
+	for index := 0; index < len(hash.bucket); index++ {
+		rbt := hash.bucket[index]
+		if rbt == nil || rbt.root == nil {
+			continue
+		}
+		queue := make([]*Node, 0)
+		queue = append(queue, rbt.root)
+		for len(queue) > 0 {
+			node := queue[0]
+			if node.v == v {
+				return true
+			}
+			queue = queue[1:]
+			if node.left != nil {
+				queue = append(queue, node.left)
+			}
+			if node.right != nil {
+				queue = append(queue, node.right)
+			}
+		}
+	}
+	return false
+}
+
 func (hash *Hash) Get(k int) (int, error) {
 	if hash == nil {
 		return 0, errors.New("hash is nil")

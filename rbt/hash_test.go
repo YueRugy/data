@@ -74,6 +74,22 @@ func TestHash_Get(t *testing.T) {
 	} else {
 		t.Error("failed")
 	}
-
-
+}
+func TestHash_ContainsValue(t *testing.T) {
+	hash := NewHash()
+	for i := 0; i < 16; i++ {
+		hash.Put(i<<4, i)
+	}
+	b1:=hash.ContainsValue(1)
+	b2:=hash.ContainsValue(178)
+	if b1{
+		t.Log("success")
+	}else {
+		t.Error("failed")
+	}
+	if !b2{
+		t.Log("success")
+	}else {
+		t.Error("failed")
+	}
 }
