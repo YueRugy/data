@@ -416,9 +416,11 @@ func rotateRR(p, c *Node) {
 
 func main() {
 
-	hash := NewHash()
+
+
+/*	hash := NewHash()
 	test3(hash)
-	test4(hash)
+	test4(hash)*/
 	//hash.Put(0, 0)
 	//hash.Remove(0)
 	//fmt.Println()
@@ -457,7 +459,7 @@ func test1(arr []int) {
 	var root *Node
 	for _, v := range arr {
 		node := &Node{
-			k:      0,
+			k:      v,
 			v:      v,
 			code:   hashCode(0),
 			color:  0,

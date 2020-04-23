@@ -66,7 +66,7 @@ func (rb *RedBlackTree) AddAfter(node *Node) {
 	//如果父节点是黑色直接添加即可
 	if rb.isBlack(node.parent) {
 		return
-	} else if rb.isRed(node) { //double red 需要处理
+	} else if rb.isRed(node.parent) { //double red 需要处理
 		if rb.isBlack(node.parent.sibling()) { //如果uncle节点==black uncle节点不存在,在红黑树里颜色是black 。这一步祖父节点必然不为nil
 			rb.process(node)
 		} else { //叔父节点是红色存在叔父节点
@@ -441,8 +441,8 @@ func rotateLL(p, c *Node) {
 		c.right.parent = p
 	}
 	c.right = p
+	c.parent = p.parent
 	if p.parent != nil {
-		c.parent = p.parent
 		flag := p.dire() == left
 		if flag {
 			p.parent.left = c
@@ -460,16 +460,14 @@ func rotateRR(p, c *Node) {
 		c.left.parent = p
 	}
 	c.left = p
+	c.parent = p.parent
 	if p.parent != nil {
-		c.parent = p.parent
 		flag := p.dire() == left
 		if flag {
 			p.parent.left = c
 		} else {
 			p.parent.right = c
 		}
-	} else {
-		c.parent = nil
 	}
 
 	p.parent = c

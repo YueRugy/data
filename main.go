@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-
 	"github.com/data/refactorBST"
+	"strconv"
 )
 
 func main() {
 
-	arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
-	fmt.Println(len(arr))
+	//	arr := []int{94, 28, 70, 86, 89, 72, 24, 7, 75, 33, 23, 9, 55, 22, 80, 30, 18}
+	//rbt := rbt.NewRedBlackTree()
+
+	//fmt.Println(len(arr))
 
 	//fmt.Println(8&(8-1))
 
