@@ -19,22 +19,43 @@ func (h *Heap) Empty() bool {
 
 func (h *Heap) Add(ele int) {
 	h.ensureCap(h.size + 1)
-	selfIndex := h.size
-	h.array[selfIndex] = ele
+	//selfIndex := h.size
+	h.array[h.size] = ele
+	h.siftUp(h.size)
+	h.size++
+}
+
+func (h *Heap) siftUp(selfIndex int) {
+	node := h.array[selfIndex]
 	for {
 		if selfIndex <= 0 {
 			break
 		}
-		fatherIndex := (selfIndex - 1) / 2
-		if h.array[selfIndex] >= h.array[fatherIndex] {
+		pin := (selfIndex - 1) >> 1
+		if node >= h.array[pin] {
 			break
 		} else {
-			h.array[fatherIndex], h.array[selfIndex] = h.array[selfIndex], h.array[fatherIndex]
-			selfIndex = fatherIndex
+			h.array[selfIndex] = h.array[pin]
+			selfIndex = pin
 		}
 	}
-	h.size++
+	h.array[selfIndex] = node
 }
+
+//func (h *Heap) siftUp(selfIndex int) {
+//	for {
+//		if selfIndex <= 0 {
+//			break
+//		}
+//		fatherIndex := (selfIndex - 1) >> 1
+//		if h.array[selfIndex] >= h.array[fatherIndex] {
+//			break
+//		} else {
+//			h.array[fatherIndex], h.array[selfIndex] = h.array[selfIndex], h.array[fatherIndex]
+//			selfIndex = fatherIndex
+//		}
+//	}
+//}
 
 func (h *Heap) Get() int {
 	if h.Empty() {
