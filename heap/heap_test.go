@@ -41,3 +41,12 @@ func TestHeap_Add(t *testing.T) {
 	//	t.Error("failed")
 	//}
 }
+func TestHeap_Remove(t *testing.T) {
+	array := []int{54, 80, 29, 79, 6, 58, 93, 86, 51, 65, 34, 39, 85, 26, 28, 95}
+	heap := NewHeap()
+	for _, v := range array {
+		heap.Add(v)
+	}
+	heap.Remove()
+	fmt.Println(heap.array)
+}

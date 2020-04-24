@@ -75,8 +75,47 @@ func (h *Heap) Clear() {
 }
 
 func (h *Heap) Remove() {
-	panic("implement me")
+	if h.size == 0 {
+		return
+	}
+	h.size--
+	if h.size == 1 {
+		h.array[h.size-1] = 0
+	} else {
+		h.array[0] = h.array[h.size]
+		node := h.array[0]
+		index := 0
+		for {
+			res := h.findMinIndex(index, node)
+			if res < 0 {
+				break
+			}
+			h.array[index] = h.array[res]
+			index = res
+		}
+		h.array[index] = node
+	}
 }
+
+func (h *Heap) findMinIndex(index, compare int, ) int {
+	left := index<<1 + 1
+	if left > h.size {
+		return -1
+	}
+	if left == h.size {
+		if h.array[left] > compare {
+			return -1
+		}
+		return left
+	} else {
+		if h.array[left+1] > compare {
+			return -1
+		}
+		return left + 1
+	}
+
+}
+
 
 func (h *Heap) Replace(num int) int {
 	return num
