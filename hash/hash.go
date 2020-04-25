@@ -538,5 +538,4 @@ func LevelRange(node *Node, visitor func(*Node)) {
 }
 func hashCode(num int) int {
 	return num
-	//TODO
 }

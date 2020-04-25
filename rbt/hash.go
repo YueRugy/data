@@ -205,5 +205,4 @@ func (hash *Hash) Empty() bool {
 
 func hashcode(num int) int {
 	return num
-	//todo
 }

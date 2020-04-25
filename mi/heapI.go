@@ -6,6 +6,6 @@ type HeapI interface {
 	Add(int)
 	Get() int
 	Clear()
-	Remove()
+	Remove() int
 	Replace(int) int
 }

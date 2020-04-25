@@ -9,6 +9,7 @@ type Heap struct {
 	array []int
 }
 
+
 func (h *Heap) Size() int {
 	return h.size
 }
