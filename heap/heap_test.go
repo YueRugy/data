@@ -77,3 +77,14 @@ func TestNewHeapSlice(t *testing.T) {
 	t.Log(s)
 	t.Log(heap.array)
 }
+func TestTopK(t *testing.T) {
+	array := []int{54, 80, 29, 79, 6, 58, 93, 86, 51, 65, 34, 39, 85, 26, 28, 95}
+	sli := TopK(3, array)
+	fmt.Println(sli)
+}
+
+func TestHeapSort(t *testing.T) {
+	array := []int{54, 80, 29, 79, 6, 58, 93, 86, 51, 65, 34, 39, 85, 26, 28, 95}
+	array = HeapSort(array)
+	t.Log(array)
+}

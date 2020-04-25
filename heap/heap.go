@@ -191,3 +191,22 @@ func (h *Heap) ensureCap(num int) {
 	newArr = append(newArr, h.array...)
 	h.array = newArr
 }
+func TopK(k int, sli []int) []int {
+	heap := NewHeap()
+	for index := 0; index < len(sli); index++ {
+		if index < k {
+			heap.Add(sli[index])
+		} else if sli[index] > heap.Get() {
+			heap.Replace(sli[index])
+		}
+	}
+	return heap.array
+}
+
+func HeapSort(arr []int) []int {
+	heap := NewHeapSlice(arr)
+	for index := heap.size - 1; index >= 0; index-- {
+		heap.array[index] = heap.Remove()
+	}
+	return heap.array
+}
