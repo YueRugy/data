@@ -1,6 +1,7 @@
 package mi
 
-type trieI interface {
+type TrieI interface {
+	Get(string) int
 	Empty() bool
 	Size() int
 	Clear()
