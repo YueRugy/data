@@ -84,16 +84,9 @@ func (h *Heap) Remove() {
 	} else {
 		h.array[0] = h.array[h.size]
 		node := h.array[0]
+		h.array[h.size] = 0
 		index := 0
-		for {
-			res := h.findMinIndex(index, node)
-			if res < 0 {
-				break
-			}
-			h.array[index] = h.array[res]
-			index = res
-		}
-		h.array[index] = node
+		h.siftDown(node, index)
 	}
 }
 
@@ -116,9 +109,32 @@ func (h *Heap) findMinIndex(index, compare int, ) int {
 
 }
 
-
 func (h *Heap) Replace(num int) int {
-	return num
+	if h.size == 0 {
+		h.array[h.size] = num
+		h.size++
+		return 0
+	}
+	ele := h.array[0]
+	h.array[0] = num
+	if h.size == 1 {
+		return ele
+	}
+	index := 0
+	h.siftDown(num, index)
+	return ele
+}
+
+func (h *Heap) siftDown(num int, index int) {
+	for {
+		res := h.findMinIndex(index, num)
+		if res < 0 {
+			break
+		}
+		h.array[index] = h.array[res]
+		index = res
+	}
+	h.array[index] = num
 }
 
 func NewHeap() *Heap {

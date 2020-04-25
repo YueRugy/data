@@ -50,3 +50,17 @@ func TestHeap_Remove(t *testing.T) {
 	heap.Remove()
 	fmt.Println(heap.array)
 }
+func TestSlice(t *testing.T) {
+	array := []int{54, 80, 29, 79}
+	a2 := make([]int, len(array))
+	a2 = append(a2, array...)
+	t.Log(&array[0], &a2[0])
+	a1 := array[1:3]
+	a1 = append(a1, 6)
+	a1=append(a1,16)
+	//a1 = append(a1, array...)
+	//a1 = append(a1, 4)
+	t.Log(&array[1], &a1[0])
+	t.Log(array)
+
+}
