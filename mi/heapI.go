@@ -1,4 +1,4 @@
-package main
+package mi
 
 type HeapI interface {
 	Size() int
