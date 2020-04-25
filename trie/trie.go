@@ -1,7 +1,5 @@
 package trie
 
-import "unicode/utf8"
-
 type Trie struct {
 	size int
 	root *node
@@ -51,28 +49,18 @@ func (t *Trie) Contains(s string) bool {
 }
 
 func (t *Trie) node(str string) *node {
-	if t.root == nil || t.root.child == nil || str == "" {
+	if t.root == nil || str == "" {
 		return nil
 	}
-	length := utf8.RuneCountInString(str)
-	count := 0
 	cm := t.root
 	for _, v := range str {
-		if cm == nil {
-			break
-		}
 		cm = cm.child[v]
 		if cm == nil {
-			break
+			return nil
 		}
-		if cm.word {
-			count++
-			break
-		}
-		count++
 	}
-	if count != length {
-		cm = nil
+	if cm.word {
+		return cm
 	}
-	return cm
+	return nil
 }
