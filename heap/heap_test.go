@@ -57,10 +57,23 @@ func TestSlice(t *testing.T) {
 	t.Log(&array[0], &a2[0])
 	a1 := array[1:3]
 	a1 = append(a1, 6)
-	a1=append(a1,16)
+	a1 = append(a1, 16)
 	//a1 = append(a1, array...)
 	//a1 = append(a1, 4)
 	t.Log(&array[1], &a1[0])
 	t.Log(array)
 
+}
+func TestNewHeapSlice(t *testing.T) {
+	array := []int{54, 80, 29, 79, 6, 58, 93, 86, 51, 65, 34, 39, 85, 26, 28, 95}
+	//array1 := []int{6, 29, 26, 51, 34, 54, 28, 86, 80, 79, 65, 58, 85, 93, 39, 95}
+	heap := NewHeapSlice(array)
+	t.Log(heap.array)
+	s := make([]int, len(array))
+	l := heap.size
+	for index := 0; index < l; index++ {
+		s[index] = heap.Remove()
+	}
+	t.Log(s)
+	t.Log(heap.array)
 }

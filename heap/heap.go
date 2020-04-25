@@ -74,37 +74,50 @@ func (h *Heap) Clear() {
 	}
 }
 
-func (h *Heap) Remove() {
+func (h *Heap) Remove() int {
 	if h.size == 0 {
-		return
+		return 0
 	}
-	h.size--
+	res := h.array[0]
 	if h.size == 1 {
-		h.array[h.size-1] = 0
+		h.size--
+		h.array[h.size] = 0
+		return res
 	} else {
+		h.size--
 		h.array[0] = h.array[h.size]
 		node := h.array[0]
 		h.array[h.size] = 0
 		index := 0
 		h.siftDown(node, index)
 	}
+	return res
 }
 
-func (h *Heap) findMinIndex(index, compare int, ) int {
+func (h *Heap) findMinIndex(index, compare int) int {
 	left := index<<1 + 1
-	if left > h.size {
+	if left >= h.size {
 		return -1
 	}
-	if left == h.size {
+	if left == h.size-1 {
 		if h.array[left] > compare {
 			return -1
 		}
 		return left
 	} else {
-		if h.array[left+1] > compare {
+		minIndex := -1
+		if h.array[left] < h.array[left+1] {
+			minIndex = left
+		} else {
+			minIndex = left + 1
+		}
+
+		if compare < h.array[minIndex] {
 			return -1
 		}
-		return left + 1
+
+		return minIndex
+
 	}
 
 }
@@ -141,6 +154,31 @@ func NewHeap() *Heap {
 	return &Heap{
 		size:  0,
 		array: make([]int, defaultCap),
+	}
+}
+func NewHeapSlice(sli []int) *Heap {
+	if sli == nil {
+		return NewHeap()
+	}
+	l := len(sli)
+	if l < defaultCap {
+		l = defaultCap
+	}
+	heap := &Heap{
+		size:  len(sli),
+		array: make([]int, l),
+	}
+	for index := 0; index < heap.size; index++ {
+		heap.array[index] = sli[index]
+	}
+	//copy(heap.array, sli)
+	heap.heapify()
+	return heap
+}
+
+func (h *Heap) heapify() {
+	for index := h.size>>1 - 1; index >= 0; index-- {
+		h.siftDown(h.array[index], index)
 	}
 }
 
