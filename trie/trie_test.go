@@ -12,9 +12,17 @@ func init() {
 	trie = NewTrie()
 	trie.Add("doggy", 1)
 	trie.Add("dog", 2)
+	trie.Add("deh", 6)
 	trie.Add("cat", 3)
+	trie.Add("catalog", 4)
+	trie.Add("cast", 7)
 	trie.Add("岳伟超", 8)
 }
+
+func TestTrie_Remove(t *testing.T) {
+	fmt.Println(trie.Remove("catalog"))
+}
+
 func TestTrie_Add(t *testing.T) {
 	tr := NewTrie()
 	tr.Add("doggy", 1)
@@ -73,6 +81,7 @@ func TestTrie_Empty(t *testing.T) {
 }
 func Test_Str(t *testing.T) {
 	str := "hello岳伟超"
+
 	fmt.Println(utf8.RuneCountInString(str))
 	for _, v := range str {
 		fmt.Printf("%c\t", v)

@@ -1,5 +1,7 @@
 package trie
 
+import "unicode/utf8"
+
 const (
 	isWord = true
 	noWord = false
@@ -9,7 +11,6 @@ type Trie struct {
 	size int
 	root *node
 }
-
 
 func NewTrie() *Trie {
 	return &Trie{
@@ -76,8 +77,44 @@ func (t *Trie) Add(str string, value int) *int {
 	cm.value = &value
 	return oldValue
 }
-func (t *Trie) Remove(s string) *int {
-	panic("implement me")
+func (t *Trie) Remove(str string) *int {
+	if str == "" {
+		return nil
+	}
+	n := t.node(str)
+	if n == nil {
+		return nil
+	}
+	t.size--
+	oldValue := n.value
+	if len(n.child) > 0 {
+		n.value = nil
+		n.word = noWord
+	}
+	length := utf8.RuneCountInString(str)
+	count := -1
+	cm := t.root
+	for index := 0; index < length-1; index++ {
+		v, width := utf8.DecodeRuneInString(str)
+		str = str[width:]
+		cm = cm.child[v]
+		if len(cm.child) > 1 || cm.word {
+			count = index
+		}
+	}
+	cn := t.root
+	for index := 0; index <= count; index++ {
+		v, width := utf8.DecodeRuneInString(str)
+		str = str[width:]
+		cn = cn.child[v]
+		if index == count {
+			v, _ = utf8.DecodeRuneInString(str)
+			cn.child[v] = nil
+		}
+
+	}
+
+	return oldValue
 }
 
 func (t *Trie) StartWith(str string) bool {
