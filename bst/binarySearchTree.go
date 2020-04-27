@@ -42,7 +42,7 @@ func (b *BinarySearchTree) Add(ele int) {
 	// 找到合适的节点
 	temp := b.root
 	var parent *Node
-	for ; temp != nil; {
+	for temp != nil {
 		parent = temp
 		if compare(ele, temp.ele) > 0 {
 			temp = temp.right
@@ -103,7 +103,7 @@ func PostRange(n *Node) {
 func LevelRange(root *Node) {
 	queue := make([]*Node, 0)
 	queue = append(queue, root)
-	for ; len(queue) != 0; {
+	for len(queue) != 0 {
 		node := queue[0]
 		fmt.Print(node.ele)
 		fmt.Print("\t")
@@ -154,7 +154,7 @@ func LevelRangeFunc(root *Node, visitor func(int)) {
 	}
 	queue := make([]*Node, 0)
 	queue = append(queue, root)
-	for ; len(queue) > 0; {
+	for len(queue) > 0 {
 		node := queue[0]
 		visitor(node.ele)
 		queue = queue[1:]
@@ -209,7 +209,7 @@ func Complete(root *Node) bool {
 	queue := make([]*Node, 0)
 	queue = append(queue, root)
 	leaf := false
-	for ; len(queue) > 0; {
+	for len(queue) > 0 {
 		node := queue[0]
 		queue = queue[1:]
 		if leaf && (node.left != nil || node.right != nil) {
@@ -235,14 +235,14 @@ func Predecessor(n *Node) *Node {
 	}
 	if n.left != nil {
 		temp := n.left
-		for ; temp.right != nil; {
+		for temp.right != nil {
 			temp = temp.right
 		}
 		return temp
 	}
 	if n.left == nil && n.parent != nil {
 		temp := n
-		for ; temp.parent != nil; {
+		for temp.parent != nil {
 			if reflect.DeepEqual(temp, temp.parent.right) {
 				return temp.parent
 			}
@@ -271,7 +271,7 @@ func Successor(n *Node) *Node {
 			if reflect.DeepEqual(temp, temp.parent.left) {
 				return temp.parent
 			}
-			temp=temp.parent
+			temp = temp.parent
 		}
 	}
 	return nil
