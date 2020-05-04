@@ -176,7 +176,7 @@ func (rbt *RedBlackTree) afterRemove(node, childNode *Node, dire int) {
 	}
 
 	if childNode.isRed() {
-		childNode.red() //node 是根节点的情况也包括在内
+		childNode.black() //node 是根节点的情况也包括在内
 		return
 	}
 

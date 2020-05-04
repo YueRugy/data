@@ -90,7 +90,7 @@ func (t *Tr) Remove(s string) *int {
 	for index, size := length, len(s); index >= 1; index-- {
 		v, width := utf8.DecodeLastRuneInString(s)
 		s = s[:size-width]
-		size-=width
+		size -= width
 		if index == length {
 			if len(n.child) > 1 {
 				break

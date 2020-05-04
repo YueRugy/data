@@ -162,8 +162,7 @@ func remove(root **Node, node *Node) (*Node, *Node) {
 			node.left.parent = nil
 			*root = node.left
 			return node, childNode
-		} else
-		if node.dire() == left {
+		} else if node.dire() == left {
 			node.parent.left = node.left
 		} else {
 			node.parent.right = node.left
@@ -416,11 +415,9 @@ func rotateRR(p, c *Node) {
 
 func main() {
 
-
-
-/*	hash := NewHash()
-	test3(hash)
-	test4(hash)*/
+	/*	hash := NewHash()
+		test3(hash)
+		test4(hash)*/
 	//hash.Put(0, 0)
 	//hash.Remove(0)
 	//fmt.Println()
